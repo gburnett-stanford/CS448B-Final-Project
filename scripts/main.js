@@ -4,7 +4,7 @@ var userInputHeight = 140;
 var userInputPadding = 20;  
 
 // create a container for the user input 
-var userInput = d3.select('div#user-input')
+var userInput = d3.select('div#userInput')
     .append('svg')
     .attr('width', userInputWidth)
     .attr('height', userInputHeight);
@@ -27,7 +27,7 @@ ageSelector.append('rect')
     .attr('y', userInputHeight - userInputPadding - ageSelectorHeight)
     .attr('width', ageSelectorWidth)
     .attr('height', ageSelectorHeight)
-    .attr('fill', 'black'); 
+    .attr('fill', 'black');
 
 ageSelector.append('text')
     .attr('x', userInputPadding + ageSelectorWidth/2)
@@ -35,6 +35,20 @@ ageSelector.append('text')
     .attr('fill', 'black')
     .style("text-anchor", "middle")
     .text('How old are you?'); 
+
+d3.csv('selector_data/age_selector.csv', function(d) {
+    return {age: d.age}
+    }).then(drawAgeSelector)
+
+function drawAgeSelector(data){
+    d3.select('.ageSelector')
+    .selectAll('myOptions')
+    .data(data)
+    .enter()
+    .append('option')
+    .text(d => d.age)
+    .attr(d => d.age); 
+}
 
 // create group for the Gender Selector 
 var genderSelector = userInput.append('g'); 
