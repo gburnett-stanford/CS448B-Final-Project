@@ -40,14 +40,20 @@ d3.csv('selector_data/age_selector.csv', function(d) {
     return {age: d.age}
     }).then(function(data){
         d3.select('#userInput')
-        .append('select')
-        .attr('id', 'ageDropdown')
-        .selectAll('myOptions')
-        .data(data)
-        .enter()
-        .append('option')
-        .text(d => d.age)
-        .attr('value', d => d.age)
+            .append('select')
+            .attr('id', 'ageDropdown')
+            .selectAll('myOptions')
+            .data(data)
+            .enter()
+            .append('option')
+            .text(d => d.age)
+            .attr('value', d => d.age)
+
+        d3.select('#ageDropdown').on('change',function(d){
+            var selected = d3.select(this).property('value');
+            console.log(selected);
+            d3.select('#selectedAge').text(selected);
+        })
     })
 
 // create group for the Gender Selector 
@@ -73,14 +79,20 @@ d3.csv('selector_data/gender_selector.csv', function(d) {
     return {gender: d.gender}
     }).then(function(data){
         d3.select('#userInput')
-        .append('select')
-        .attr('id', 'genderDropdown')
-        .selectAll('myOptions')
-        .data(data)
-        .enter()
-        .append('option')
-        .text(d => d.gender)
-        .attr('value', d => d.gender)
+            .append('select')
+            .attr('id', 'genderDropdown')
+            .selectAll('myOptions')
+            .data(data)
+            .enter()
+            .append('option')
+            .text(d => d.gender)
+            .attr('value', d => d.gender)
+
+        d3.select('#genderDropdown').on('change',function(d){
+            var selected = d3.select(this).property('value');
+            console.log(selected);
+            d3.select('#selectedGender').text(selected);
+        })
     })
 
 // create group for the State Selector 
@@ -106,12 +118,18 @@ d3.csv('selector_data/state_selector.csv', function(d) {
     return {state: d.state}
     }).then(function(data){
         d3.select('#userInput')
-        .append('select')
-        .attr('id', 'stateDropdown')
-        .selectAll('myOptions')
-        .data(data)
-        .enter()
-        .append('option')
-        .text(d => d.state)
-        .attr('value', d => d.state)
+            .append('select')
+            .attr('id', 'stateDropdown')
+            .selectAll('myOptions')
+            .data(data)
+            .enter()
+            .append('option')
+            .text(d => d.state)
+            .attr('value', d => d.state)
+
+        d3.select('#stateDropdown').on('change',function(d){
+            var selected = d3.select(this).property('value');
+            console.log(selected);
+            d3.select('#selectedState').text(selected);
+        })
     })
