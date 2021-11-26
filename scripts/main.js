@@ -4,7 +4,7 @@ var userInputHeight = 140;
 var userInputPadding = 20;  
 
 // create a container for the user input 
-var userInput = d3.select('div#userInput')
+var userInput = d3.select('div#userPrompt')
     .append('svg')
     .attr('width', userInputWidth)
     .attr('height', userInputHeight);
@@ -18,7 +18,7 @@ var userInputBackground = userInput.append('rect')
     .attr('fill', 'steelblue'); 
 
 // create group for the Age Selector 
-var ageSelector = userInput.append('g'); 
+var ageSelector = userInput.append('g');
 var ageSelectorWidth = 200; 
 var ageSelectorHeight = 50;
 
@@ -38,17 +38,17 @@ ageSelector.append('text')
 
 d3.csv('selector_data/age_selector.csv', function(d) {
     return {age: d.age}
-    }).then(drawAgeSelector)
-
-function drawAgeSelector(data){
-    d3.select('.ageSelector')
-    .selectAll('myOptions')
-    .data(data)
-    .enter()
-    .append('option')
-    .text(d => d.age)
-    .attr(d => d.age); 
-}
+    }).then(function(data){
+        d3.select('#userInput')
+        .append('select')
+        .attr('id', 'ageDropdown')
+        .selectAll('myOptions')
+        .data(data)
+        .enter()
+        .append('option')
+        .text(d => d.age)
+        .attr('value', d => d.age)
+    })
 
 // create group for the Gender Selector 
 var genderSelector = userInput.append('g'); 
@@ -69,6 +69,20 @@ genderSelector.append('text')
     .style("text-anchor", "middle")
     .text('What is your gender?'); 
 
+d3.csv('selector_data/gender_selector.csv', function(d) {
+    return {gender: d.gender}
+    }).then(function(data){
+        d3.select('#userInput')
+        .append('select')
+        .attr('id', 'genderDropdown')
+        .selectAll('myOptions')
+        .data(data)
+        .enter()
+        .append('option')
+        .text(d => d.gender)
+        .attr('value', d => d.gender)
+    })
+
 // create group for the State Selector 
 var stateSelector = userInput.append('g'); 
 var stateSelectorWidth = 200; 
@@ -87,3 +101,17 @@ stateSelector.append('text')
     .attr('fill', 'black')
     .style("text-anchor", "middle")
     .text('Which state do you live in?'); 
+
+d3.csv('selector_data/state_selector.csv', function(d) {
+    return {state: d.state}
+    }).then(function(data){
+        d3.select('#userInput')
+        .append('select')
+        .attr('id', 'stateDropdown')
+        .selectAll('myOptions')
+        .data(data)
+        .enter()
+        .append('option')
+        .text(d => d.state)
+        .attr('value', d => d.state)
+    })
