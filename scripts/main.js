@@ -33,7 +33,7 @@ ageSelector.append('text')
     .attr('x', userInputPadding + ageSelectorWidth/2)
     .attr('y', userInputPadding * 2)
     .attr('fill', 'black')
-    .style("text-anchor", "middle")
+    .style('text-anchor', 'middle')
     .text('How old are you?'); 
 
 // create group for the Gender Selector 
@@ -178,7 +178,7 @@ function createTopTenGraph(data){
         // Define behavior for the output from Age Selector 
         d3.select('#ageDropdown').on('change',function(d){
             selected_age = d3.select(this).property('value');
-            d3.select('#selectedAge').text(selected_age);
+            d3.selectAll('.selectedAge').text(selected_age);
             updateGraph(selected_age)
         })
 
@@ -193,7 +193,10 @@ function createTopTenGraph(data){
             return d3.descending(a.value, b.value);
         })
         topTenData = dummyData.slice(0, 10);
+        topOneData = topTenData.slice(0, 1);
         console.log(topTenData)
+
+        d3.select('#topOneProduct').text(topOneData[0].key);
        
         // define the x scale here
         const xscale = d3.scaleBand()
@@ -207,8 +210,8 @@ function createTopTenGraph(data){
 
         // define a separate scale for the y axis (the range is flipped)
         const yaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
-        .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
-        .range([topTenHeight, 0]) // [0, maximum value on screen] 
+            .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
+            .range([topTenHeight, 0]) // [0, maximum value on screen] 
 
         // define a separate scale for the x axis (scale starts at 1, not 0)
         const xaxis_scale = d3.scaleBand()
@@ -258,21 +261,30 @@ function createTopTenGraph(data){
                 .text("Number of Injuries"); 
         }
 
+        // draw the bar graph 
         drawAxes(topTenPlot);
 
-        // draw the bar graph 
         topTenPlot.selectAll('rect')
             .data(topTenData)
             .join('rect')
-                .transition()
-                .duration(1000)
                 .attr('x', function(d, i){return xscale(i)})
                 .attr('y', d => topTenHeight-yscale(d.value))       
-                .attr('width', d => xscale.bandwidth())
+                .attr('width', xscale.bandwidth())
                 .attr('height', d => yscale(d.value))  
                 .style('fill', function(d, i){return color(i)})
-                .style('stroke', 'white');
-
+                .style('stroke', 'white')
+                .on('mouseover', function (event, d) {   
+                    midpoint = Number(d3.select(this).attr('x')) + Number(d3.select(this).attr('width'))/2; 
+                    topTenPlot.append('text')           
+                        .attr('class', 'ptLabel')                
+                        .attr('x', midpoint)                
+                        .attr('y', topTenHeight-yscale(d.value) - 10)                
+                        .style('text-anchor', 'middle')
+                        .text(d.key); 
+                })
+                .on('mouseout', function(event, d) {
+                    topTenPlot.selectAll('.ptLabel').remove()    
+                });
     }
     }   
 }
