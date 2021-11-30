@@ -204,44 +204,63 @@ function createTopTenGraph(data){
         topTenData = dummyData.slice(0, 10);
         console.log(topTenData)
        
-        // define the x scale here.
+        // define the x scale here
         const xscale = d3.scaleBand()
             .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
             .range([0, topTenWidth]);
 
-        // define the y scale here.
+        // define the y scale here
         const yscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
             .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
-            .range([0, topTenHeight]) // 0, maximum value on screen] 
+            .range([0, topTenHeight]) // [0, maximum value on screen] 
+
+        // define a separate scale for the y axis (the range is flipped)
+        const yaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
+        .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
+        .range([topTenHeight, 0]) // [0, maximum value on screen] 
 
         // define the color scale 
         color = d3.scaleOrdinal(d3.schemePastel1).domain([0, 10]);
 
+        function clearAxes(plotContainer){
+            plotContainer.select('#x_axis').remove();
+            plotContainer.select('#x_axis_label').remove();
+            plotContainer.select('#y_axis').remove();
+            plotContainer.select('#y_axis_label').remove();
+        }
+
         // create the axes 
-        function createAxes(plotContainer) {
+        function drawAxes(plotContainer) {
 
-            const xAxis = plotContainer.append('g')                      //create SVG <g> elt for x-axis
-                .attr('transform', `translate(0,${topTenHeight})`)   //translate to bottom of plot
-                .call(d3.axisBottom(xscale));                               //use axisBottom to form ticks below
+            // first clear anything on the axes
+            clearAxes(plotContainer); 
 
-            const yAxis = plotContainer.append('g')                      //create SVG <g> elt for y-axis
-                .call(d3.axisLeft(yscale));                               //use axisLeft to form ticks to the left
+            const xAxis = plotContainer.append('g')                      
+                .attr('transform', `translate(0,${topTenHeight})`)   
+                .attr('id', 'x_axis')
+                .call(d3.axisBottom(xscale));                               
+
+            const yAxis = plotContainer.append('g')    
+                .attr('id', 'y_axis')                  
+                .call(d3.axisLeft(yaxis_scale));                               
 
             const xAxisLabel = plotContainer.append("text")
+                .attr('id', 'x_axis_label')
                 .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 35})`)
                 .style("text-anchor", "middle")
                 .text("Consumer Products");
 
             const yAxisLabel = plotContainer.append("text")
+                .attr('id', 'y_axis_label')
                 .attr("transform", "rotate(-90)")
                 .attr("y", 0 - plotMargin)
-                .attr("x",0 - (topTenHeight / 2))
+                .attr("x", 0 - (topTenHeight / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
                 .text("Number of Injuries"); 
         }
 
-        createAxes(topTenPlot)
+        drawAxes(topTenPlot);
 
         // draw the bar graph 
         topTenPlot.selectAll('rect')
