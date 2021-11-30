@@ -4,7 +4,7 @@ var userInputHeight = 140;
 var userInputPadding = 20;  
 
 // create a container for the user input 
-var userInput = d3.select('div#userPrompt')
+var userInput = d3.select('#userPrompt')
     .append('svg')
     .attr('width', userInputWidth)
     .attr('height', userInputHeight);
@@ -152,13 +152,6 @@ function createTopTenContainer() {
 var topTenContainer = createTopTenContainer();
 var topTenPlot = topTenContainer.select('#topTenPlot');
 
-// topTenPlot.append('text')
-//     .attr('id', 'agePrompt')
-//     .attr('x', topTenWidth/2)
-//     .attr('y', topTenHeight/2)
-//     .style('text-anchor', 'middle')
-//     .text('Please Select an Age')
-
 // Create the graph 
 d3.csv('data/dataset.csv', d3.autoType).then(createTopTenGraph)
 
@@ -189,8 +182,6 @@ function createTopTenGraph(data){
             updateGraph(selected_age)
         })
 
-        // TODO: Fix behavior around default behaviors 
-    
     function updateGraph(age){
 
         filteredData = data.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
@@ -241,7 +232,9 @@ function createTopTenGraph(data){
                 .call(d3.axisBottom(xscale));                               
 
             const yAxis = plotContainer.append('g')    
-                .attr('id', 'y_axis')                  
+                .attr('id', 'y_axis')             
+                .transition()
+                .duration(1000)     
                 .call(d3.axisLeft(yaxis_scale));                               
 
             const xAxisLabel = plotContainer.append("text")
@@ -266,6 +259,8 @@ function createTopTenGraph(data){
         topTenPlot.selectAll('rect')
             .data(topTenData)
             .join('rect')
+                .transition()
+                .duration(1000)
                 .attr('x', function(d, i){return xscale(i)})
                 .attr('y', d => topTenHeight-yscale(d.value))       
                 .attr('width', d => xscale.bandwidth())
