@@ -36,32 +36,6 @@ ageSelector.append('text')
     .style("text-anchor", "middle")
     .text('How old are you?'); 
 
-// // Create the Age Selector 
-// d3.csv('data/age_selector.csv', function(d) {
-//     return {age: d.age}
-//     }).then(updateAgeSelector)
-
-// function updateAgeSelector(data){
-
-//     // Populate the Age Selector with the data 
-//     d3.select('#userInput')
-//         .append('select')
-//         .attr('id', 'ageDropdown')
-//         .selectAll('myOptions')
-//         .data(data)
-//         .enter()
-//         .append('option')
-//         .text(d => d.age)
-//         .attr('value', d => d.age)
-
-//     // Define behavior for the output from Age Selector 
-//     d3.select('#ageDropdown').on('change',function(d){
-//         var selected = d3.select(this).property('value');
-//         d3.select('#selectedAge').text(selected);
-//         updateTopTenGraph();
-//     })
-// }
-
 // create group for the Gender Selector 
 var genderSelector = userInput.append('g'); 
 var genderSelectorWidth = 200; 
@@ -151,27 +125,51 @@ function updateStateSelector(data){
 }
 
 // Draw the Top 10 Bar Graph 
-
 var topTenWidth = 1000; 
 var topTenHeight = 300; 
+var plotMargin = 50; 
 
 // Create a container for the graph 
-var topTenContainer = d3.select('div#topTenBarGraph')
-    .append('svg')
-    .attr('width', topTenWidth)
-    .attr('height', topTenHeight);
+function createTopTenContainer() {
+
+    const outerWidth = topTenWidth + plotMargin*2;      
+    const outerHeight = topTenHeight + plotMargin*2;    
+    
+    var topTenContainer = d3.select('#topTenContainer')
+        .append('svg')
+        .attr('width', outerWidth)
+        .attr('height', outerHeight)
+        .style('background-color', 'whitesmoke')  
+    
+    topTenContainer.append('g')
+        // Translate g element by plotMargin, plotMargin to place inner plotting region.
+        .attr('transform', `translate(${plotMargin},${plotMargin})`) 
+        .attr('id', 'topTenPlot');   //Give the plot container an id so we can access it later.
+    
+    return topTenContainer;
+}
+
+var topTenContainer = createTopTenContainer();
+var topTenPlot = topTenContainer.select('#topTenPlot');
+
+// topTenPlot.append('text')
+//     .attr('id', 'agePrompt')
+//     .attr('x', topTenWidth/2)
+//     .attr('y', topTenHeight/2)
+//     .style('text-anchor', 'middle')
+//     .text('Please Select an Age')
 
 // Create the graph 
-d3.csv('data/dataset.csv', d3.autoType).then(updateTopTenGraph)
+d3.csv('data/dataset.csv', d3.autoType).then(createTopTenGraph)
 
-function updateTopTenGraph(data){
+function createTopTenGraph(data){
 
-    // Create the Age Selector 
+    // Create the age selector 
     d3.csv('data/age_selector.csv', function(d) {
         return {age: d.age}
-        }).then(updateAgeSelector)
+        }).then(createAgeSelector)
 
-    function updateAgeSelector(age_data){
+    function createAgeSelector(age_data){
 
         // Populate the Age Selector with the data 
         d3.select('#userInput')
@@ -188,10 +186,12 @@ function updateTopTenGraph(data){
         d3.select('#ageDropdown').on('change',function(d){
             selected_age = d3.select(this).property('value');
             d3.select('#selectedAge').text(selected_age);
-            update(selected_age)
+            updateGraph(selected_age)
         })
+
+        // TODO: Fix behavior around default behaviors 
     
-    function update(age){
+    function updateGraph(age){
 
         filteredData = data.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
 
@@ -214,10 +214,37 @@ function updateTopTenGraph(data){
             .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
             .range([0, topTenHeight]) // 0, maximum value on screen] 
 
+        // define the color scale 
         color = d3.scaleOrdinal(d3.schemePastel1).domain([0, 10]);
 
+        // create the axes 
+        function createAxes(plotContainer) {
+
+            const xAxis = plotContainer.append('g')                      //create SVG <g> elt for x-axis
+                .attr('transform', `translate(0,${topTenHeight})`)   //translate to bottom of plot
+                .call(d3.axisBottom(xscale));                               //use axisBottom to form ticks below
+
+            const yAxis = plotContainer.append('g')                      //create SVG <g> elt for y-axis
+                .call(d3.axisLeft(yscale));                               //use axisLeft to form ticks to the left
+
+            const xAxisLabel = plotContainer.append("text")
+                .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 35})`)
+                .style("text-anchor", "middle")
+                .text("Consumer Products");
+
+            const yAxisLabel = plotContainer.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - plotMargin)
+                .attr("x",0 - (topTenHeight / 2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Number of Injuries"); 
+        }
+
+        createAxes(topTenPlot)
+
         // draw the bar graph 
-        topTenContainer.selectAll('rect')
+        topTenPlot.selectAll('rect')
             .data(topTenData)
             .join('rect')
                 .attr('x', function(d, i){return xscale(i)})
@@ -228,7 +255,5 @@ function updateTopTenGraph(data){
                 .style('stroke', 'white');
 
     }
-}
-
-
+    }   
 }
