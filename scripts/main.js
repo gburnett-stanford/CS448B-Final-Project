@@ -197,7 +197,7 @@ function createTopTenGraph(data){
        
         // define the x scale here
         const xscale = d3.scaleBand()
-            .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+            .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
             .range([0, topTenWidth]);
 
         // define the y scale here
@@ -209,6 +209,11 @@ function createTopTenGraph(data){
         const yaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
         .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
         .range([topTenHeight, 0]) // [0, maximum value on screen] 
+
+        // define a separate scale for the x axis (scale starts at 1, not 0)
+        const xaxis_scale = d3.scaleBand()
+            .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+            .range([0, topTenWidth]);
 
         // define the color scale 
         color = d3.scaleOrdinal(d3.schemePastel1).domain([0, 10]);
@@ -229,7 +234,7 @@ function createTopTenGraph(data){
             const xAxis = plotContainer.append('g')                      
                 .attr('transform', `translate(0,${topTenHeight})`)   
                 .attr('id', 'x_axis')
-                .call(d3.axisBottom(xscale));                               
+                .call(d3.axisBottom(xaxis_scale));                               
 
             const yAxis = plotContainer.append('g')    
                 .attr('id', 'y_axis')             
