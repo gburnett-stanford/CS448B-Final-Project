@@ -16,6 +16,10 @@ body {
     width: 60vw;
 }
 
+#section-1 p, select {
+    margin-bottom: 2em;
+}
+
 .bar {
     fill: steelblue;
 }

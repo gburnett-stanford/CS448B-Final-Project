@@ -73,6 +73,11 @@ d3.csv('data/injury_table.csv',
     // Now I can use this dataset:
     function(data) {
 
+        console.log(data);
+        var dataArr = Object.keys(data);
+        console.log(dataArr);
+        var categories = d3.group(data, d => d['PRODUCT 1']);
+        console.log(categories);
         // List of groups (here I have one group per column)
         var allGroup = d3.map(data, function(d){return(d.name)}).keys()
 
