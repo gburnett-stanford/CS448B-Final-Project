@@ -94,7 +94,7 @@ function createChart1(injuryData) {
         .attr("stroke", "none")
         .attr("cx", function(d) { 
             for (let i = 0; i < +d.value; i++) {
-                return xAxis(d.dates[i].date); 
+                return xAxis(d.dates[i].date); // check this maybe 
             }
             //console.log(d.dates[0].date); 
         })
