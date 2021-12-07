@@ -127,6 +127,7 @@ function updateStateSelector(data){
 // Draw the Top 10 Bar Graph 
 var topTenWidth = 1000; 
 var topTenHeight = 300; 
+var topTenBarHeight = topTenHeight / 10; 
 var plotMargin = 50; 
 
 // Create a container for the graph 
@@ -199,24 +200,19 @@ function createTopTenGraph(data){
         d3.select('#topOneProduct').text(topOneData[0].key);
        
         // define the x scale here
-        const xscale = d3.scaleBand()
-            .domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-            .range([0, topTenWidth]);
+        const xscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
+            .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
+            .range([0, topTenWidth/2]) // [0, maximum value on screen] 
+
+        // define the x-axis scale here
+        const xaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
+        .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
+        .range([0, topTenWidth]) // [0, maximum value on screen] 
 
         // define the y scale here
-        const yscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
-            .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
-            .range([0, topTenHeight]) // [0, maximum value on screen] 
-
-        // define a separate scale for the y axis (the range is flipped)
-        const yaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
-            .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
-            .range([topTenHeight, 0]) // [0, maximum value on screen] 
-
-        // define a separate scale for the x axis (scale starts at 1, not 0)
-        const xaxis_scale = d3.scaleBand()
+        const yscale = d3.scaleBand()
             .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-            .range([0, topTenWidth]);
+            .range([0, topTenHeight]);
 
         // define the color scale 
         color = d3.scaleOrdinal(d3.schemePastel1).domain([0, 10]);
@@ -240,16 +236,14 @@ function createTopTenGraph(data){
                 .call(d3.axisBottom(xaxis_scale));                               
 
             const yAxis = plotContainer.append('g')    
-                .attr('id', 'y_axis')             
-                .transition()
-                .duration(1000)     
-                .call(d3.axisLeft(yaxis_scale));                               
+                .attr('id', 'y_axis')               
+                .call(d3.axisLeft(yscale));                               
 
             const xAxisLabel = plotContainer.append("text")
                 .attr('id', 'x_axis_label')
                 .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 35})`)
                 .style("text-anchor", "middle")
-                .text("Consumer Products");
+                .text("Number of Injuries");
 
             const yAxisLabel = plotContainer.append("text")
                 .attr('id', 'y_axis_label')
@@ -258,33 +252,35 @@ function createTopTenGraph(data){
                 .attr("x", 0 - (topTenHeight / 2))
                 .attr("dy", "1em")
                 .style("text-anchor", "middle")
-                .text("Number of Injuries"); 
+                .text("Consumer Product Ranking"); 
         }
 
-        // draw the bar graph 
+        // draw the graph axies 
         drawAxes(topTenPlot);
 
+        // draw the bars for the bar graph 
         topTenPlot.selectAll('rect')
             .data(topTenData)
             .join('rect')
-                .attr('x', function(d, i){return xscale(i)})
-                .attr('y', d => topTenHeight-yscale(d.value))       
-                .attr('width', xscale.bandwidth())
-                .attr('height', d => yscale(d.value))  
+                .attr('x', 0)
+                .attr('y', (d, i) => i*topTenBarHeight)       
+                .attr('width', d => xscale(d.value))
+                .attr('height', topTenBarHeight)  
                 .style('fill', function(d, i){return color(i)})
                 .style('stroke', 'white')
-                .on('mouseover', function (event, d) {   
-                    midpoint = Number(d3.select(this).attr('x')) + Number(d3.select(this).attr('width'))/2; 
-                    topTenPlot.append('text')           
-                        .attr('class', 'ptLabel')                
-                        .attr('x', midpoint)                
-                        .attr('y', topTenHeight-yscale(d.value) - 10)                
-                        .style('text-anchor', 'middle')
-                        .text(d.key); 
-                })
-                .on('mouseout', function(event, d) {
-                    topTenPlot.selectAll('.ptLabel').remove()    
-                });
+
+        var text_padding = 10; 
+
+        // draw the text lbaels for the bar graph 
+        topTenPlot.selectAll('.bar_labels')
+            .data(topTenData)
+            .join('text')
+                .attr('class', 'bar_labels')
+                .attr('alignment-baseline', 'middle')
+                .attr('x', d => xscale(d.value) + text_padding)
+                .attr('y', (d, i) => i*topTenBarHeight + topTenBarHeight/2)
+                .attr('fill', 'black')
+                .text(d => d.key); 
     }
     }   
 }
