@@ -12,28 +12,23 @@ var svg = d3.select("#my_dataviz")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Read the CSV data table and extract injury data
-const injuryData = d3.csv('data/injury_table.csv', function(d) {
-    return {
-        year : d3.timeParse("%Y")(d.incidentYear),
-        category: d.category
-    }
-}).then(createChart1);
+d3.csv('data/injury_table.csv', d3.autoType).then(createChart1)
 
 // Creates Chart 1
-function createChart1(injuryData) {
+function createChart1(data) {
 
-    function createCategoryDropdown(injuryData){
+    function createCategoryDropdown(data){
 
         // Create a map where the key is the injury category and the
         // value is the count of injuries in that category
-        var filteredData = injuryData.filter(function(d) { return d.category !== '' && d.year >= d3.timeParse("%Y")(2015); });
+        var filteredData = data.filter(function(d) { return d.category !== '' && d.incidentYear >= 2015; });
         var categoryGroup = d3.group(filteredData, d => d.category, d => d.year);
 
         var categoryMap = d3.map(categoryGroup, function(key) {
             return {key: key[0], years: key[1]} 
         })
 
-        //sorted by num injuries       
+        // sorted by num injuries       
         categoryMap.sort(function(a, b){
             return d3.descending(a.value, b.value);
         })
@@ -57,31 +52,41 @@ function createChart1(injuryData) {
                     return d.key.replace(/ *\([^d)]*\) */g, "");
                 }
             }) // text shown in drop down
-            .attr("value", function(d) { return d.key.replace(/ *\([^d)]*\) */g, ""); })
+            .attr("value", d => d.key)
+            // .attr("value", function(d) { return d.key.replace(/ *\([^d)]*\) */g, ""); })
         
         // Define behavior for the output from Category Dropdown 
         d3.select('#categoryDropdown').on('change',function(d){
             var selectedCategory = d3.select(this).property('value');
+            d3.select('#productCategory').text(selectedCategory); 
             updateGraph(selectedCategory);
         })
     }
 
-    createCategoryDropdown(injuryData); 
+    createCategoryDropdown(data); 
     
     // update the graph based on the selection 
     function updateGraph(category) {
 
-        filteredData = injuryData.filter(d => d['category'].includes(category));
-        dummyData = d3.group(filteredData, d => d['year']);
-        dummyData = d3.map(dummyData, function(key, value) { return {key: key[0], value: key[1].length} })      
+        filteredData = data.filter(d => d['category'] == category);
+
+        dummyData = d3.group(filteredData, d => d['VICTIM 1 AGE YEARS']);
+        
+        dummyData = d3.map(dummyData, function(key, value) { return {key: key[0], value: key[1].length} })   
+        dummyData = dummyData.filter(d => d.key != null);
+
+        dummyData.sort(function(a, b){
+            return d3.descending(a.value, b.value);
+        })
+
+        topOneAge = dummyData.slice(0, 1);
+        d3.select('#topOneAge').text(topOneAge[0].key);   
+
         console.log(dummyData) 
 
     }
 
 }
-
-//     // Selector must display current category with values on axis (updates)
-
 
 //     // X axis
 //     var xAxis = d3.scaleTime()
