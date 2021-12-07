@@ -206,7 +206,7 @@ function createTopTenGraph(data){
 
         // define the x-axis scale here
         const xaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
-        .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
+        .domain([0, d3.max(topTenData, d => d.value)*2]) // [0, maximum value in data]
         .range([0, topTenWidth]) // [0, maximum value on screen] 
 
         // define the y scale here
