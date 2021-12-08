@@ -4,24 +4,42 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Tiempos Headline Web',Georgia,Times,serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     margin: 0;
+    color: #282828;
+}
+
+h1 {
+    font-size: 3.5em;
+    line-height: 4.3rem;
+}
+
+#authors {
+    max-width: 40rem;
+    margin: 0 auto;
+    text-align: center;
+    font-size: .9rem;
+    font-family: 'National 2 Web',Helvetica,Arial,sans-serif;
+    color: #000;
+}
+
+.authors-container {
+    margin: 3rem 0 5rem;
 }
 
 #section-1 {
-    width: 60vw;
-}
-
-#section-1 p, select {
-    margin-bottom: 2em;
+    margin: 0 auto;
+    padding: 6rem 1rem 8rem 1rem;
+    max-width: 743px;
 }
 
 select {
     height: 2.5em;
+    margin-top: 1em;
 }
 
 .bar {
@@ -30,4 +48,22 @@ select {
 
 .label {
     font-weight: 600;
+}
+
+.paragraph {
+    line-height: 1.5em;
+    max-width: 620px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+}
+
+#productCategory, #topOneAge {
+    color: #228B22;
+}
+
+h3 {
+    font-family: 'Tiempos Headline Web',Georgia,Times,serif;
+    font-size: 1.5rem;
+    max-width: 635px;
+    margin: 2% auto;
 }
