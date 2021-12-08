@@ -18,6 +18,15 @@ h1 {
     line-height: 4.3rem;
 }
 
+h2 {
+    font-size: 3rem;
+    max-width: 635px;
+    text-align: center;
+    margin: 4% auto 6%;
+    line-height: 3.625rem;
+    padding: 0 1rem;
+}
+
 #authors {
     max-width: 40rem;
     margin: 0 auto;
@@ -45,7 +54,7 @@ a:link:hover {
     margin: 3rem 0 5rem;
 }
 
-#main {
+.main {
     margin: 0 auto;
     padding: 2rem 1rem 8rem 1rem;
     max-width: 743px;

@@ -69,7 +69,7 @@ function createChart1(data) {
 
         filteredData = data.filter(d => d['category'] == category);
 
-        dummyData = d3.group(filteredData, d => d['VICTIM 1 AGE YEARS']);
+        var dummyData = d3.group(filteredData, d => d['VICTIM 1 AGE YEARS']);
         
         dummyData = d3.map(dummyData, function(key, value) { return {key: key[0], value: key[1].length} })   
         dummyData = dummyData.filter(d => d.key != null);
