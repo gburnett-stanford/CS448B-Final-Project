@@ -53,12 +53,11 @@ function createChart1(data) {
                 }
             }) // text shown in drop down
             .attr("value", d => d.key)
-            // .attr("value", function(d) { return d.key.replace(/ *\([^d)]*\) */g, ""); })
         
         // Define behavior for the output from Category Dropdown 
         d3.select('#categoryDropdown').on('change',function(d){
             var selectedCategory = d3.select(this).property('value');
-            d3.select('#productCategory').text(selectedCategory); 
+            d3.select('#productCategory').text(selectedCategory.replace(/ *\([^d)]*\) */g, "")); 
             updateGraph(selectedCategory);
         })
     }
