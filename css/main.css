@@ -27,13 +27,27 @@ h1 {
     color: #000;
 }
 
+a:link {
+    color: #282828;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #282828;
+    text-decoration: underline;
+}
+
+a:link:hover {
+    text-decoration: none;
+}
+
 .authors-container {
     margin: 3rem 0 5rem;
 }
 
-#section-1 {
+#main {
     margin: 0 auto;
-    padding: 6rem 1rem 8rem 1rem;
+    padding: 2rem 1rem 8rem 1rem;
     max-width: 743px;
 }
 
@@ -55,6 +69,7 @@ select {
     max-width: 620px;
     margin: 1rem auto;
     padding: 0 1rem;
+    text-align: left;
 }
 
 #productCategory, #topOneAge {

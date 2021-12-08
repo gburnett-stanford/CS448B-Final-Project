@@ -22,18 +22,31 @@
 </head>
 
 <body>
-  <!-- SECTION 1 -->
-  <div id="section-1">
-    <h1>Which Everyday Objects to Look Out For</h1>
+  <!-- Main Content -->
+  <div id="main">
+    <h1>Everyday Objects to Look Out For 👀</h1>
     <div class="authors-container">
-      <p id="authors">by Gary Burnett and Braedon Silvers</p>
+      <p id="authors">
+        by <a href="mailto:garyb@stanford.edu">Gary Burnett</a> and <a href="mailto:bsilvers@stanford.edu">Braedon Silvers</a> 
+      </p>
     </div>
-    <p class="paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis diam quis finibus tincidunt. Maecenas quis egestas lectus. Sed ornare tellus magna, quis lacinia sem ullamcorper eget. In erat urna, pretium id ullamcorper scelerisque, pharetra quis nunc. Cras molestie rutrum pharetra. Nunc a blandit lacus. Aliquam at varius diam.</p>
+    <p class="paragraph">
+      If you're reading this, chances are you've been injured at least once during your lifetime.
+      Over the course of a lifetime, the everyday objects that can harm us change as we age. The
+      Consumer Product Safety Commission, or CPSC, is an organization within the United States whose
+      main mission is to protect the public from unreasonable risks of injury or death caused by consumer products. Americans who have been injured
+      or died as well as property damage caused from consumer products cost the US more than more than $1
+      trillion every year.
+    </p>
+    <p class="paragraph">
+      This project utilizes the CSPC's data on injuries and deaths caused by consumer products allowing
+      us to take a look at 20,674 Americans who were injured by consumer products in 2020. Let's see which products are most dangerous to different ages.
+    </p>
     <br/>
     <h3> The demographic most at risk with <b id="productCategory"> ___ </b> are <b id="topOneAge"> ___ </b> year olds </h3>
     <!-- Initialize a select button -->
   <select id="selectButton">
-    <option selected disabled>Select the Product Category</option>
+    <option selected disabled>Select a Product Category to Explore</option>
   </select>
   </div>
 
@@ -41,7 +54,6 @@
   <div id="my_dataviz"></div>
 
   <!-- Load Main Script -->
-  
   <script src="scripts/main2.js"></script>
 </body>
 </html>
