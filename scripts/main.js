@@ -111,7 +111,7 @@ function createChart1(data) {
         // Define behavior for the output from Category Dropdown 
         d3.select('#categoryDropdown').on('change',function(d){
             var selectedCategory = d3.select(this).property('value');
-            d3.select('#productCategory').text(selectedCategory); 
+            d3.select('#productCategory').text(selectedCategory.replace(/ *\([^d)]*\) */g, "")); 
             updateGraph(selectedCategory);
         })
     }
