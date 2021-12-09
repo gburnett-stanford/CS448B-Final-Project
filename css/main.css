@@ -113,8 +113,6 @@ circle {
     cursor: pointer;
 }
 
-
-
 #tooltip {
     line-height: 1;
     font-weight: bold;
@@ -122,4 +120,25 @@ circle {
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
     border-radius: 0.2em;
+}
+
+table {
+    margin: 0 auto; /* or margin: 0 auto 0 auto */
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+#highchair-table tr:hover {
+    background-color: #228B22;
 }
