@@ -145,3 +145,8 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+
+#highchair-table {
+    color: #000;
+    margin-bottom: 6em;
+}
