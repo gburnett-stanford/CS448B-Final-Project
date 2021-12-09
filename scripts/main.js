@@ -1,3 +1,7 @@
+// *******************************************
+// ****** HIGH CHAIR
+// *******************************************
+
 // constant dimensions of visualization 1
 const margin = {top: 10, right: 30, bottom: 45, left: 65};
 const width = 1060 - margin.left - margin.right;

@@ -89,7 +89,7 @@ select:hover {
     text-align: left;
 }
 
-#productCategory, #topOneAge {
+#productCategory, #topOneAge, .greenText {
     color: #228B22;
 }
 
