@@ -145,7 +145,3 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
-
-#highchair-table tr:hover {
-    background-color: #228B22;
-}

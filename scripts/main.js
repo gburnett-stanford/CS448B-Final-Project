@@ -44,11 +44,24 @@ function createCircles(data) {
         .attr("cy", d => d.y)
         .attr("r", 10)
         .on("mouseover", function(d) {
+            var curRow = d3.select(this).data()[0].id;
+            d3.select(curRow).style("background-color", "#228B22"); //math id here add new data id-name
+            d3.select(curRow).style("font-weight", "bold");
             tooltip.text(d3.select(this).data()[0].location);
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+        .on("mouseout", function(d) {
+            var curRow = d3.select(this).data()[0].id;
+            console.log(curRow);
+            var backgroundColor = "#ffffff";
+            if (curRow === "#row-frame" || curRow === "#row-restraint" || curRow === "#row-tray") {
+                backgroundColor = "#dddddd";
+            } 
+            d3.select(curRow).style("background-color", backgroundColor);
+            d3.select(curRow).style("font-weight", "500");
+            return tooltip.style("visibility", "hidden");
+        });
 }
 
 // *******************************************
