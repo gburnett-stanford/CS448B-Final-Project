@@ -65,7 +65,7 @@ function createCircles(data) {
 }
 
 // *******************************************
-// ****** AGE HISTOGRAM
+// ****** AGE HISTOGRAM *********************
 // *******************************************
 
 // Add SVG 
@@ -234,58 +234,6 @@ var userInputWidth = 1000;
 var userInputHeight = 140;  
 var userInputPadding = 20;  
 
-// create a container for the user input 
-var userInput = d3.select('#userPrompt')
-    .append('svg')
-    .attr('width', userInputWidth)
-    .attr('height', userInputHeight);
-
-// give the user input container a background fill 
-var userInputBackground = userInput.append('rect')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', userInputWidth)
-    .attr('height', userInputHeight)
-    .attr('fill', 'steelblue'); 
-
-// create group for the Age Selector 
-var ageSelector = userInput.append('g');
-var ageSelectorWidth = 200; 
-var ageSelectorHeight = 50;
-
-ageSelector.append('rect')
-    .attr('x', userInputPadding)
-    .attr('y', userInputHeight - userInputPadding - ageSelectorHeight)
-    .attr('width', ageSelectorWidth)
-    .attr('height', ageSelectorHeight)
-    .attr('fill', 'black');
-
-ageSelector.append('text')
-    .attr('x', userInputPadding + ageSelectorWidth/2)
-    .attr('y', userInputPadding * 2)
-    .attr('fill', 'black')
-    .style('text-anchor', 'middle')
-    .text('How old are you?'); 
-
-// create group for the Gender Selector 
-var genderSelector = userInput.append('g'); 
-var genderSelectorWidth = 200; 
-var genderSelectorHeight = 50;
-
-genderSelector.append('rect')
-    .attr('x', userInputWidth/2 - genderSelectorWidth/2)
-    .attr('y', userInputHeight - userInputPadding - genderSelectorHeight)
-    .attr('width', genderSelectorWidth)
-    .attr('height', genderSelectorHeight)
-    .attr('fill', 'black'); 
-
-genderSelector.append('text')
-    .attr('x', userInputWidth/2)
-    .attr('y', userInputPadding * 2)
-    .attr('fill', 'black')
-    .style("text-anchor", "middle")
-    .text('What is your gender?'); 
-
 // Create the Gender Selector 
 d3.csv('data/gender_selector.csv', function(d) {
     return {gender: d.gender}
@@ -310,25 +258,6 @@ function updateGenderSelector(data){
         d3.select('#selectedGender').text(selected);
     })
 }
-
-// create group for the State Selector 
-var stateSelector = userInput.append('g'); 
-var stateSelectorWidth = 200; 
-var stateSelectorHeight = 50;
-
-stateSelector.append('rect')
-    .attr('x', userInputWidth - stateSelectorWidth - userInputPadding)
-    .attr('y', userInputHeight - userInputPadding - stateSelectorHeight)
-    .attr('width', stateSelectorWidth)
-    .attr('height', stateSelectorHeight)
-    .attr('fill', 'black'); 
-
-stateSelector.append('text')
-    .attr('x', userInputWidth - userInputPadding - stateSelectorWidth/2)
-    .attr('y', userInputPadding * 2)
-    .attr('fill', 'black')
-    .style("text-anchor", "middle")
-    .text('Which state do you live in?'); 
 
 // Create the State Selector 
 d3.csv('data/state_selector.csv', function(d) {
@@ -413,6 +342,7 @@ function createTopTenGraph(data){
             d3.selectAll('.selectedAge').text(selected_age);
             updateGraph(selected_age)
         })
+    }
 
     function updateGraph(age){
 
@@ -426,9 +356,8 @@ function createTopTenGraph(data){
         })
         topTenData = dummyData.slice(0, 10);
         topOneData = topTenData.slice(0, 1);
-        console.log(topTenData)
 
-        d3.select('#topOneProduct').text(topOneData[0].key);
+        d3.selectAll('.topOneProduct').text(topOneData[0].key);
        
         // define the x scale here
         const xscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
@@ -512,6 +441,35 @@ function createTopTenGraph(data){
                 .attr('y', (d, i) => i*topTenBarHeight + topTenBarHeight/2)
                 .attr('fill', 'black')
                 .text(d => d.key); 
+
+        // show the injury descriptions 
+        function showInjuryDescriptions() {
+
+            // get the top most dangerous product and the selected age 
+            topOneProduct = topOneData[0].key; 
+            ageFilter = d3.select('#ageDropdown').property('value'); 
+
+            // filter data for just incident descriptions matching the above parameters
+            filteredData = data.filter(d => d['category'] === topOneProduct);
+            filteredData = filteredData.filter(d => d['VICTIM 1 AGE YEARS'] === Number(ageFilter));
+            filteredData = filteredData.map(d => d['INCIDENT DESCRIPTION'])
+
+            // display a random description as text
+            randomDescription = filteredData[Math.floor(Math.random()*filteredData.length)];
+            d3.select('#injuryDescriptionText').text(randomDescription);
+
+            // Define behavior for the refresh button 
+            d3.select('#refreshButton').on('click',function(d){
+                updateInjuryDescriptions(filteredData);
+        }) 
+        }
+
+        function updateInjuryDescriptions(data){
+            randomDescription = data[Math.floor(Math.random()*data.length)];
+            d3.select('#injuryDescriptionText').text(randomDescription);
+        }
+
+        showInjuryDescriptions();
+
     }
-    }   
 }

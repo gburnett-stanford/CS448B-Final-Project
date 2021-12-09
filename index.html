@@ -44,12 +44,6 @@
       us to take a look at 20,674 Americans who were injured by consumer products in 2020. Let's first take
       a look at high chairs.
     </p>
-    <!-- Initialize a select button -->
-    <!-- <h3> The demographic most at risk with <b id="productCategory"> ___ </b> are <b id="topOneAge"> ___ </b> year olds </h3>
-     Initialize a select button
-    <select id="selectButton">
-      <option selected disabled>Select a Product Category to Explore</option>
-    </select> -->
   </div>
 
   <div class="main">
@@ -126,12 +120,31 @@
 
   <h3> Let’s explore which consumer products could be the most dangerous to YOU </h3>
 
-  <!-- Create container for user input -->
-  <div id='userPrompt'></div>
+  <!-- Visualization 2 - Top Ten Graph -->
   <div id='userInput'></div>
   <p>You have selected that you are a <b class="selectedAge"> ___ </b> year old <b id="selectedGender"> ___ </b> living in <b id="selectedState"> ___ </b>.</p> 
-  <p> The most dangerous consumer product for a <b class="selectedAge"> ___ </b> year old is: <b id="topOneProduct"> ___ </b> </p>
+  <p> The most dangerous consumer product for a <b class="selectedAge"> ___ </b> year old is: <b class="topOneProduct"> ___ </b> </p>
   <div id='topTenContainer'></div>
+
+  <!-- Visualization 3 - Exploring Top One -->
+  <h3>Let's explore the most dangerous product to you</h3>
+
+  <p class="paragraph">
+    Let's explore your most dangerous product: 
+  </p>
+
+  <p class="paragraph">
+    Below is a description of one of the <b class="topOneProduct"> ___  </b> injuries involving a <b class="selectedAge"> ___ </b> year old. Press the "Refresh" button to see a different description. 
+  </p>
+
+  <div>
+    <button id="refreshButton"> Refresh </button>
+    <i><h3 id="injuryDescriptionText"> </h3></i>
+  </div>
+
+  <p class="paragraph">
+    Can you see any commonalities in the way people have been injured by this product? What kind of proposal could the CPSC make to reduce the number of injuries caused by this consumer product? 
+  </p>
 
   <!-- Load Main Script -->
   <script src="scripts/main.js"></script>
