@@ -40,7 +40,7 @@ function createCircles(data) {
         .attr("cy", d => d.y)
         .attr("r", 10)
         .on("mouseover", function(d) {
-            tooltip.text(d3.select(this).data()[0].location);
+            tooltip.text(d3.select(this).data()[0].location); // edit tooltip text
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
