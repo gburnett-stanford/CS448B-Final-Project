@@ -1,150 +1,161 @@
-/*var width = 400, height = 400;
+// constant dimensions of visualization 1
+const margin = {top: 10, right: 30, bottom: 45, left: 65};
+const width = 1060 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
 
-var data = [10, 15, 20, 25, 30];
-var svg = d3.select("body")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var xscale = d3.scaleLinear()
-    .domain([0, d3.max(data)])
-    .range([0, width - 100]);
-
-var yscale = d3.scaleLinear()
-        .domain([0, d3.max(data)])
-        .range([width - 100 , 0]);
-
-var x_axis = d3.axisBottom()
-        .scale(xscale);
-
-var y_axis = d3.axisLeft()
-        .scale(yscale);
-
-    svg.append("g")
-       .attr("transform", "translate(50, 10)")
-       .call(y_axis);
-
-var xAxisTranslate = height/2 + 110;
-
-svg.append("g")
-    .attr("transform", "translate(50, " + xAxisTranslate  +")")
-    .call(x_axis)
-
-// X-Axis Label
-svg.append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "end")
-    .attr("x", width/2 + 20)
-    .attr("y", height - 45)
-    .text("Year");
-
-// Y-Axis Label
-svg.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("y", 0)
-    .attr("x", - 85)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("Number of Injuries");*/
-
-
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 45, left: 65};
-var width = 860 - margin.left - margin.right;
-var height = 400 - margin.top - margin.bottom;
-
-// append the svg object to the body of the page
+// Add SVG 
 var svg = d3.select("#my_dataviz")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .style('background-color', 'whitesmoke')  
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-//Read the data
-d3.csv('data/injury_table.csv',
+// Read the CSV data table and extract injury data
+d3.csv('data/injury_table.csv', d3.autoType).then(createChart1)
 
-    // Need to sum incidents for year / for year + month
-    function(d){
-        return { date : d3.timeParse("%Y-%m")(d.incidentYear + '-' + d.incidentMonth), value : d.incidentMonth }
-    },
+// Creates Chart 1
+function createChart1(data) {
 
-    // Now I can use this dataset:
-    function(data) {
+    function createCategoryDropdown(data){
 
-        console.log(data);
-        var dataArr = Object.keys(data);
-        console.log(dataArr);
-        var categories = d3.group(data, d => d['PRODUCT 1']);
-        console.log(categories);
-        // List of groups (here I have one group per column)
-        var allGroup = d3.map(data, function(d){return(d.name)}).keys()
+        // Create a map where the key is the injury category and the
+        // value is the count of injuries in that category
+        var filteredData = data.filter(function(d) { return d.category !== '' && d.incidentYear >= 2015; });
+        var categoryGroup = d3.group(filteredData, d => d.category, d => d.year);
 
-        // add the options to the button
+        var categoryMap = d3.map(categoryGroup, function(key) {
+            return {key: key[0], years: key[1]} 
+        })
+
+        // sorted by num injuries       
+        categoryMap.sort(function(a, b){
+            return d3.descending(a.value, b.value);
+        })
+
+        // sorted alphabetically
+        var categoryMapAlphabetical = categoryMap;
+        categoryMapAlphabetical.sort(function(a, b){
+            return d3.ascending(a.key, b.key);
+        })
+
+        // Create the product category selector 
         d3.select("#selectButton")
-        .selectAll('myOptions')
-            .data(allGroup)
-        .enter()
-            .append('option')
-        .text(function (d) { return d; }) // text showed in the menu
-        .attr("value", function (d) { return d; }) // corresponding value returned by the button
-
-        // Add X axis --> it is a date format
-        var x = d3.scaleTime()
-            .domain(d3.extent(data, function(d) { return d.date; }))
-            .range([ 0, width ]);
-        svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-
-
-        // Add Y axis
-        var y = d3.scaleLinear()
-            .domain([0, d3.max(data, function(d) { return +d.value; })])
-            .range([ height, 0 ]);
-        svg.append("g")
-            .call(d3.axisLeft(y));
-
-        // Add the circle data points (order matters w line)
-        svg.selectAll("myCircles")
-            .data(data)
+            .attr('id', 'categoryDropdown')
+            .selectAll('myOptions')
+                .data(categoryMapAlphabetical)
             .enter()
-            .append("circle")
-            .attr("fill", "red")
-            .attr("stroke", "none")
-            .attr("cx", function(d) { return x(d.date) })
-            .attr("cy", function(d) { return y(d.value) })
-            .attr("r", 2.5)
-
-        // Add the line
-        svg.append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1.5)
-            .attr("d", d3.line()
-                .x(function(d) { return x(d.date) })
-                .y(function(d) { return y(d.value) })
-            )
+                .append('option')
+            .text(function(d) { 
+                if (d.key != null) {
+                    // remove the code included in date i.e. '(1409)'
+                    return d.key.replace(/ *\([^d)]*\) */g, "");
+                }
+            }) // text shown in drop down
+            .attr("value", d => d.key)
+            // .attr("value", function(d) { return d.key.replace(/ *\([^d)]*\) */g, ""); })
         
+        // Define behavior for the output from Category Dropdown 
+        d3.select('#categoryDropdown').on('change',function(d){
+            var selectedCategory = d3.select(this).property('value');
+            d3.select('#productCategory').text(selectedCategory); 
+            updateGraph(selectedCategory);
+        })
+    }
+
+    createCategoryDropdown(data); 
+    
+    // update the graph based on the selection 
+    function updateGraph(category) {
+
+        // filter the data 
+        filteredData = data.filter(d => d['category'] == category);
+        dummyData = d3.group(filteredData, d => d['VICTIM 1 AGE YEARS']);
+        dummyData = d3.map(dummyData, function(key, value) { return {key: key[0], value: key[1].length} })   
+        dummyData = dummyData.filter(d => d.key != null);
+
+        // report most affected age 
+        mostToLeastAffected = dummyData.sort(function(a, b){
+            return d3.descending(a.value, b.value);
+        })
+        topOneAge = mostToLeastAffected.slice(0, 1);
+        d3.select('#topOneAge').text(topOneAge[0].key); 
         
-    })
+        // sort in ascending age, for plotting 
+        dummyData = dummyData.sort(function(a, b){
+            return d3.ascending(a.key, b.key);
+        })
 
-// X-Axis Label
-svg.append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "end")
-    .attr("x", width/2 + 20)
-    .attr("y", height + 45)
-    .text("Year");
+        console.log(dummyData) 
 
-// Y-Axis Label
-svg.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("y", -65)
-    .attr("x", - 90)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("Number of Injuries");
+        // define the y scale here
+        const yscale = d3.scaleLinear() 
+            .domain([0, d3.max(dummyData, d => d.value)+1]) 
+            .range([0, height]) 
+
+        // define the y scale here
+        const yaxis_scale = d3.scaleLinear() 
+            .domain([0, d3.max(dummyData, d => d.value)+1]) 
+            .range([height, 0]) 
+
+        // define the x scale here
+        const xscale = d3.scaleBand()
+            .domain(d3.range(0, d3.max(dummyData, d => d.key)+1))
+            .range([0, width]);
+
+        // define the color scale 
+        color = d3.scaleOrdinal(d3.schemePastel1).domain(d3.range(d => d.length));
+
+        function clearAxes(plotContainer){
+            plotContainer.select('#x_axis').remove();
+            plotContainer.select('#x_axis_label').remove();
+            plotContainer.select('#y_axis').remove();
+            plotContainer.select('#y_axis_label').remove();
+        }
+
+        // create the axes 
+        function drawAxes(plotContainer) {
+
+            // first clear anything on the axes
+            clearAxes(plotContainer); 
+
+            const xAxis = plotContainer.append('g')                      
+                .attr('transform', `translate(0,${height})`)   
+                .attr('id', 'x_axis')
+                .call(d3.axisBottom(xscale));                               
+
+            const yAxis = plotContainer.append('g')    
+                .attr('id', 'y_axis')               
+                .call(d3.axisLeft(yaxis_scale));                               
+
+            const xAxisLabel = plotContainer.append("text")
+                .attr('id', 'x_axis_label')
+                .attr("transform", `translate(${width/2}, ${height + 35})`)
+                .style("text-anchor", "middle")
+                .text("Age");
+
+            const yAxisLabel = plotContainer.append("text")
+                .attr('id', 'y_axis_label')
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - (height/2))
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Number of Injuries"); 
+        }
+
+        // draw the graph axes 
+        drawAxes(svg);
+
+        // draw the bars for the bar graph 
+        svg.selectAll('rect')
+            .data(dummyData)
+            .join('rect')
+                .attr('x', d => xscale(d.key))
+                .attr('y', d => height-yscale(d.value))       
+                .attr('width', xscale.bandwidth())
+                .attr('height', d => yscale(d.value))  
+                .style('fill', function(d, i){return color(i)})
+    }
+}
