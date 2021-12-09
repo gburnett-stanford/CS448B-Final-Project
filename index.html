@@ -5,26 +5,120 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>A Basic HTML5 Template</title>
-  <meta name="description" content="A simple HTML5 Template for new projects.">
-  <meta name="author" content="SitePoint">
+  <meta name="description" content="A dive into injuries caused by consumer products.">
+  <meta name="author" content="Gary Burnett and Braedon Silvers">
 
-  <meta property="og:title" content="A Basic HTML5 Template">
+  <meta property="og:title" content="CS448B Final Project: Injuries">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.sitepoint.com/a-basic-html5-template/">
-  <meta property="og:description" content="A simple HTML5 Template for new projects.">
-  <meta property="og:image" content="image.png">
+  <meta property="og:description" content="A journal article exploring the ways you and others get injured.">
 
   <link rel="icon" href="/favicon.ico">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
-  <h1> A Basic HTML5 Template </h1>
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <!-- Load D3 -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 
 <body>
-  <!-- your content here... -->
-  <script src="scripts/main.js"></script>
+  <!-- Main Content -->
+  <div class="main">
+    <h1>Everyday Objects to Look Out For 👀</h1>
+    <div class="authors-container">
+      <p id="authors">
+        by <a href="mailto:garyb@stanford.edu">Gary Burnett</a> and <a href="mailto:bsilvers@stanford.edu">Braedon Silvers</a> 
+      </p>
+    </div>
+    <p class="paragraph">
+      If you're reading this, chances are you've been injured at least once during your lifetime.
+      Over the course of a lifetime, the everyday objects that can harm us change as we age. The
+      <a href="https://www.cpsc.gov/" target="_blank">Consumer Product Safety Commission</a>, or 
+      CPSC, is an organization within the United States whose main mission is to protect the public
+      from unreasonable risks of injury or death caused by consumer products. Americans who have been injured
+      or died as well as property damage caused from consumer products cost the US more than more than $1
+      trillion every year.
+    </p>
+    <p class="paragraph">
+      This project utilizes the <a href="https://www.cpsc.gov/cgibin/CHQuery/home.aspx" target="blank">CSPC's data</a> on injuries and deaths caused by consumer products allowing
+      us to take a look at 20,674 Americans who were injured by consumer products in 2020. Let's first take
+      a look at high chairs.
+    </p>
+    <!-- Initialize a select button -->
+    <!-- <h3> The demographic most at risk with <b id="productCategory"> ___ </b> are <b id="topOneAge"> ___ </b> year olds </h3>
+     Initialize a select button
+    <select id="selectButton">
+      <option selected disabled>Select a Product Category to Explore</option>
+    </select> -->
+  </div>
+
+  <div class="main">
+    <h2>High Chairs</h2>
+    <h3> The demographic most at risk with <b id="productCategory">High Chairs</b> are <b id="topOneAge">infants under the age of 1.</b></h3>
+    <p class="paragraph">
+      Understanding that this is the most dangerous consumer product to those &lt; 1 years old is just one part of the bigger picture. 
+      The other part is utilizing that data in order to reduce the amount of injuries and deaths occurring to better protect the users
+      of the products.
+    </p>
+
+    <p class="paragraph">
+      Below is a a high chair visualized with the parts of the chair, or hazard patterns, that are most invovled when the injury incident
+      occurrs.
+    </p>
+
+    <!-- Visualization 1 -->
+    <div id="highchair"></div>
+
+    <table id="highchair-table">
+      <tr>
+        <th>Hazard Pattern</th>
+        <th>Total Incidents</th>
+        <th>Injuries</th>
+        <th>Fatalities</th>
+      </tr>
+      <tr>
+        <td>Frame</td>
+        <td>650</td>
+        <td>20</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Seat</td>
+        <td>205</td>
+        <td>41</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Restraint System</td>
+        <td>139</td>
+        <td>12</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Armrest</td>
+        <td>81</td>
+        <td>2</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Tray</td>
+        <td>75</td>
+        <td>33</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>Toy Accessories</td>
+        <td>70</td>
+        <td>1</td>
+        <td>0</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Visualization 1 -->
+  <div id="my_dataviz"></div>
+
+  <!-- Load Main Script -->
+  <script src="scripts/main3.js"></script>
 </body>
 </html>
