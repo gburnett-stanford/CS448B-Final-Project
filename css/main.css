@@ -56,13 +56,21 @@ a:link:hover {
 
 .main {
     margin: 0 auto;
-    padding: 2rem 1rem 8rem 1rem;
+    padding: 2rem 1rem 2rem 1rem;
     max-width: 743px;
 }
 
 select {
     height: 2.5em;
     margin-top: 1em;
+    cursor: pointer;
+}
+
+select:hover {
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+    border-color: green;
+    border-radius: 0.2em;
+    border-width: 0.1em;
 }
 
 .bar {
@@ -90,4 +98,28 @@ h3 {
     font-size: 1.5rem;
     max-width: 635px;
     margin: 2% auto;
+}
+
+#highchair image {
+    min-width: 1000px;
+    min-height: 1000px;
+    width: 400px;
+    height: 400px;
+}
+
+circle {
+    fill: #228B22;
+    stroke: black;
+    cursor: pointer;
+}
+
+
+
+#tooltip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 0.2em;
 }

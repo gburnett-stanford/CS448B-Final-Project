@@ -11,6 +11,24 @@ var svg = d3.select("#my_dataviz")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+// Add SVG 
+var highchair = d3.select("#highchair")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var imgs = highchair.selectAll("image").data([0]);
+    imgs.enter()
+    .append("svg:image")
+    .attr("xlink:href", "images/high-chair.jpeg")
+    .attr("x", "60")
+    .attr("y", "60")
+    .attr("width", "30vw")
+    .attr("height", "30vw");
+
+
 // Read the CSV data table and extract injury data
 d3.csv('data/injury_table.csv', d3.autoType).then(createChart1)
 

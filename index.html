@@ -33,31 +33,47 @@
     <p class="paragraph">
       If you're reading this, chances are you've been injured at least once during your lifetime.
       Over the course of a lifetime, the everyday objects that can harm us change as we age. The
-      Consumer Product Safety Commission, or CPSC, is an organization within the United States whose
-      main mission is to protect the public from unreasonable risks of injury or death caused by consumer products. Americans who have been injured
+      <a href="https://www.cpsc.gov/" target="_blank">Consumer Product Safety Commission</a>, or 
+      CPSC, is an organization within the United States whose main mission is to protect the public
+      from unreasonable risks of injury or death caused by consumer products. Americans who have been injured
       or died as well as property damage caused from consumer products cost the US more than more than $1
       trillion every year.
     </p>
     <p class="paragraph">
-      This project utilizes the CSPC's data on injuries and deaths caused by consumer products allowing
-      us to take a look at 20,674 Americans who were injured by consumer products in 2020. Let's see which products are most dangerous to different ages.
+      This project utilizes the <a href="https://www.cpsc.gov/cgibin/CHQuery/home.aspx" target="blank">CSPC's data</a> on injuries and deaths caused by consumer products allowing
+      us to take a look at 20,674 Americans who were injured by consumer products in 2020. Let's first take
+      a look at high chairs.
     </p>
-    <br/>
-    <h3> The demographic most at risk with <b id="productCategory"> ___ </b> are <b id="topOneAge"> ___ </b> year olds </h3>
     <!-- Initialize a select button -->
+    <!-- <h3> The demographic most at risk with <b id="productCategory"> ___ </b> are <b id="topOneAge"> ___ </b> year olds </h3>
+     Initialize a select button
     <select id="selectButton">
       <option selected disabled>Select a Product Category to Explore</option>
-    </select>
+    </select> -->
+  </div>
+
+  <div class="main">
+    <h2>High Chairs</h2>
+    <h3> The demographic most at risk with <b id="productCategory">High Chairs</b> are <b id="topOneAge">infants under the age of 1.</b></h3>
+    <p class="paragraph">
+      Understanding that this is the most dangerous consumer product to those &lt; 1 years old is just one part of the bigger picture. 
+      The other part is utilizing that data in order to reduce the amount of injuries and deaths occurring to better protect the users
+      of the products.
+    </p>
+
+    <p class="paragraph">
+      Below is a a high chair visualized with the parts of the chair, or hazard patterns, that are most invovled when the injury incident
+      occurrs.
+    </p>
+
+    <!-- Visualization 1 -->
+    <div id="highchair"></div>
   </div>
 
   <!-- Visualization 1 -->
   <div id="my_dataviz"></div>
 
-  <div class="main">
-    <h2>What's most dangerous to you?</h2>
-  </div>
-
   <!-- Load Main Script -->
-  <script src="scripts/main2.js"></script>
+  <script src="scripts/main3.js"></script>
 </body>
 </html>
