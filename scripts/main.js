@@ -71,15 +71,18 @@ function createCircles(data) {
 // ****** AGE HISTOGRAM *********************
 // *******************************************
 
+var newLeftMargin = margin.left + 30;
+var newTopMargin = margin.top + 25;
+
 // Add SVG 
 var svg = d3.select("#my_dataviz")
     .append("svg")
     .attr("id", 'age-histogram')
     .attr("width", width + margin.left + margin.right + 200)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("height", height + margin.top + margin.bottom + 50)
     .style('background-color', 'whitesmoke')  
     .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + newLeftMargin + "," + newTopMargin+ ")");
 
 // Read the CSV data table and extract injury data
 d3.csv('data/injury_table.csv', d3.autoType).then(createChart1)
@@ -200,7 +203,7 @@ function createChart1(data) {
 
             const xAxisLabel = plotContainer.append("text")
                 .attr('id', 'x_axis_label')
-                .attr("transform", `translate(${width/2}, ${height + 35})`)
+                .attr("transform", `translate(${(width + 200)/2}, ${height + 35})`)
                 .style("text-anchor", "middle")
                 .text("Age");
 
