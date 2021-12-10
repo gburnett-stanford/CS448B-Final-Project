@@ -509,10 +509,20 @@ function createTopTenGraph(data){
                 // get the top most dangerous product and the selected age 
                 topOneProduct = topOneData[0].key; 
                 age = d3.select('#ageDropdown').property('value'); 
+                state = d3.select('#stateDropdown').property('value');
+                gender = d3.select('#genderDropdown').property('value');
 
                 // filter data for just incident descriptions matching the above parameters
                 filteredData = data.filter(d => d['category'] === topOneProduct);
-                filteredData = filteredData.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
+                if (age != 'What is your age?') {
+                    filteredData = filteredData.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
+                }
+                if (gender != 'What is your gender?') {
+                    filteredData = filteredData.filter(d => d['VICTIM 1 GENDER'] === gender);
+                }
+                if (state != 'Which state do you live in?') {
+                    filteredData = filteredData.filter(d => d['STATE'] === state);
+                }
                 filteredData = filteredData.map(d => d['INCIDENT DESCRIPTION'])
 
                 // display a random description as text
