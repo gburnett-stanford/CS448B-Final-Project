@@ -241,6 +241,7 @@ var userInputWidth = 1000;
 var userInputHeight = 140;  
 var userInputPadding = 20;  
 
+var selected_age = undefined;
 // Create the Gender Selector 
 d3.csv('data/gender_selector.csv', function(d) {
     return {gender: d.gender}
@@ -249,9 +250,7 @@ d3.csv('data/gender_selector.csv', function(d) {
 function updateGenderSelector(data){
 
     // Populate the Gender Selector with the data 
-    d3.select('#userInput')
-        .append('select')
-        .attr('id', 'genderDropdown')
+    d3.select('#genderDropdown')
         .selectAll('myOptions')
         .data(data)
         .enter()
@@ -266,28 +265,26 @@ function updateGenderSelector(data){
     })
 }
 
-// Create the State Selector 
-d3.csv('data/state_selector.csv', function(d) {
-    return {state: d.state}
-    }).then(updateStateSelector)
+// Create the age selector 
+d3.csv('data/age_selector.csv', function(d) {
+    return {age: d.age}
+}).then(createAgeSelector);
 
-function updateStateSelector(data){
+function createAgeSelector(age_data){
 
-    // Populate the State Selector with the data 
-    d3.select('#userInput')
-        .append('select')
-        .attr('id', 'stateDropdown')
+    // Populate the Age Selector with the data 
+    d3.select('#ageDropdown')
         .selectAll('myOptions')
-        .data(data)
+        .data(age_data)
         .enter()
         .append('option')
-        .text(d => d.state)
-        .attr('value', d => d.state)
+        .text(d => d.age)
+        .attr('value', d => d.age)
 
-    // Define behavior for the output from State Selector 
-    d3.select('#stateDropdown').on('change',function(d){
-        var selected = d3.select(this).property('value');
-        d3.select('#selectedState').text(selected);
+    // Define behavior for the output from Age Selector 
+    d3.select('#ageDropdown').on('change',function(d){
+        selected_age = d3.select(this).property('value');
+        d3.selectAll('.selectedAge').text(selected_age);
     })
 }
 
@@ -325,28 +322,26 @@ d3.csv('data/injury_table.csv', d3.autoType).then(createTopTenGraph)
 
 function createTopTenGraph(data){
 
-    // Create the age selector 
-    d3.csv('data/age_selector.csv', function(d) {
-        return {age: d.age}
-        }).then(createAgeSelector)
+    // Create the State Selector 
+    d3.csv('data/state_selector.csv', function(d) {
+        return {state: d.state}
+        }).then(updateStateSelector)
 
-    function createAgeSelector(age_data){
+    function updateStateSelector(data){
 
-        // Populate the Age Selector with the data 
-        d3.select('#userInput')
-            .append('select')
-            .attr('id', 'ageDropdown')
+        // Populate the State Selector with the data 
+        d3.select('#stateDropdown')
             .selectAll('myOptions')
-            .data(age_data)
+            .data(data)
             .enter()
             .append('option')
-            .text(d => d.age)
-            .attr('value', d => d.age)
+            .text(d => d.state)
+            .attr('value', d => d.state)
 
-        // Define behavior for the output from Age Selector 
-        d3.select('#ageDropdown').on('change',function(d){
-            selected_age = d3.select(this).property('value');
-            d3.selectAll('.selectedAge').text(selected_age);
+        // Define behavior for the output from State Selector 
+        d3.select('#stateDropdown').on('change',function(d){
+            var selected = d3.select(this).property('value');
+            d3.select('#selectedState').text(selected);
             updateGraph(selected_age)
         })
     }
@@ -364,7 +359,7 @@ function createTopTenGraph(data){
         topTenData = dummyData.slice(0, 10);
         topOneData = topTenData.slice(0, 1);
 
-        d3.selectAll('.topOneProduct').text(topOneData[0].key);
+        d3.selectAll('.topOneProduct').text(topOneData[0].key.replace(/ *\([^d)]*\) */g, ""));
        
         // define the x scale here
         const xscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
@@ -382,7 +377,7 @@ function createTopTenGraph(data){
             .range([0, topTenHeight]);
 
         // define the color scale 
-        color = d3.scaleOrdinal(d3.schemePastel1).domain([0, 10]);
+        color = d3.scaleOrdinal(d3.schemePaired).domain([0, 10]);
 
         function clearAxes(plotContainer){
             plotContainer.select('#x_axis').remove();
@@ -447,7 +442,7 @@ function createTopTenGraph(data){
                 .attr('x', d => xscale(d.value) + text_padding)
                 .attr('y', (d, i) => i*topTenBarHeight + topTenBarHeight/2)
                 .attr('fill', 'black')
-                .text(d => d.key); 
+                .text(d => d.key.replace(/ *\([^d)]*\) */g, "")); 
 
         // show the injury descriptions 
         function showInjuryDescriptions() {

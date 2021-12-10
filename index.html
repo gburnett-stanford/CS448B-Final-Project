@@ -154,14 +154,20 @@
 
   <div class="main">
     <h2>All About You</h2>
+    <p class="paragraph">
+      In this part of the project we want to make it personal to <b>you</b>.
+    </p>
+
+    <!-- Visualization 2 - Top Ten Graph -->
+    <div id='userInput'>
+      <select id="ageDropdown"></select>
+      <select id="genderDropdown"></select>
+      <select id="stateDropdown"></select>
+    </div>
+    <h3>You have selected that you are a <b class="selectedAge greenText"> ___ </b> year old <b id="selectedGender" class="greenText"> ___ </b> living in <b id="selectedState" class="greenText"> ___ </b>.</h3> 
+    <h3> The most dangerous consumer product for <b class="greenText">you</b> is: <b class="topOneProduct greenText"> ___ </b> </h3>
   </div>
 
-  <h3> Let’s explore which consumer products could be the most dangerous to YOU </h3>
-
-  <!-- Visualization 2 - Top Ten Graph -->
-  <div id='userInput'></div>
-  <p>You have selected that you are a <b class="selectedAge"> ___ </b> year old <b id="selectedGender"> ___ </b> living in <b id="selectedState"> ___ </b>.</p> 
-  <p> The most dangerous consumer product for a <b class="selectedAge"> ___ </b> year old is: <b class="topOneProduct"> ___ </b> </p>
   <div id='topTenContainer'></div>
 
   <!-- Visualization 3 - Exploring Top One -->
