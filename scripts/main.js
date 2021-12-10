@@ -244,51 +244,6 @@ var userInputHeight = 140;
 var userInputPadding = 20;  
 
 var selected_age = undefined;
-// Create the Gender Selector 
-d3.csv('data/gender_selector.csv', function(d) {
-    return {gender: d.gender}
-    }).then(updateGenderSelector)
-
-function updateGenderSelector(data){
-
-    // Populate the Gender Selector with the data 
-    d3.select('#genderDropdown')
-        .selectAll('myOptions')
-        .data(data)
-        .enter()
-        .append('option')
-        .text(d => d.gender)
-        .attr('value', d => d.gender)
-
-    // Define behavior for the output from Gender Selector 
-    d3.select('#genderDropdown').on('change',function(d){
-        var selected = d3.select(this).property('value');
-        d3.select('#selectedGender').text(selected);
-    })
-}
-
-// Create the age selector 
-d3.csv('data/age_selector.csv', function(d) {
-    return {age: d.age}
-}).then(createAgeSelector);
-
-function createAgeSelector(age_data){
-
-    // Populate the Age Selector with the data 
-    d3.select('#ageDropdown')
-        .selectAll('myOptions')
-        .data(age_data)
-        .enter()
-        .append('option')
-        .text(d => d.age)
-        .attr('value', d => d.age)
-
-    // Define behavior for the output from Age Selector 
-    d3.select('#ageDropdown').on('change',function(d){
-        selected_age = d3.select(this).property('value');
-        d3.selectAll('.selectedAge').text(selected_age);
-    })
-}
 
 // Draw the Top 10 Bar Graph 
 var topTenWidth = 1000; 
@@ -324,6 +279,66 @@ d3.csv('data/injury_table.csv', d3.autoType).then(createTopTenGraph)
 
 function createTopTenGraph(data){
 
+    // Create the Gender Selector 
+    d3.csv('data/gender_selector.csv', function(d) {
+        return {gender: d.gender}
+        }).then(updateGenderSelector)
+
+    function updateGenderSelector(data){
+
+        // Populate the Gender Selector with the data 
+        d3.select('#genderDropdown')
+            .selectAll('myOptions')
+            .data(data)
+            .enter()
+            .append('option')
+            .text(d => d.gender)
+            .attr('value', d => d.gender)
+
+        // Define behavior for the output from Gender Selector 
+        d3.select('#genderDropdown').on('change',function(d){
+            gender = d3.select(this).property('value');
+            if (gender == data[0].gender){
+                d3.selectAll('#selectedGender').text('');
+            } else {
+                d3.selectAll('#selectedGender').text(gender);
+            }
+            state = d3.select('#stateDropdown').property('value');
+            age = d3.select('#ageDropdown').property('value');
+            updateGraph(age, gender, state)
+        })
+    }
+
+    // Create the age selector 
+    d3.csv('data/age_selector.csv', function(d) {
+        return {age: d.age}
+    }).then(createAgeSelector);
+
+    function createAgeSelector(data){
+
+        // Populate the Age Selector with the data 
+        d3.select('#ageDropdown')
+            .selectAll('myOptions')
+            .data(data)
+            .enter()
+            .append('option')
+            .text(d => d.age)
+            .attr('value', d => d.age)
+
+        // Define behavior for the output from Age Selector 
+        d3.select('#ageDropdown').on('change',function(d){
+            age = d3.select(this).property('value');
+            if (age === data[0].age){
+                d3.selectAll('#selectedAge').text('');
+            } else {
+                d3.selectAll('#selectedAge').text('a ' + age + ' year old');
+            }
+            state = d3.select('#stateDropdown').property('value');
+            gender = d3.select('#genderDropdown').property('value');
+            updateGraph(age, gender, state)
+        })
+    }
+
     // Create the State Selector 
     d3.csv('data/state_selector.csv', function(d) {
         return {state: d.state}
@@ -342,140 +357,182 @@ function createTopTenGraph(data){
 
         // Define behavior for the output from State Selector 
         d3.select('#stateDropdown').on('change',function(d){
-            var selected = d3.select(this).property('value');
-            d3.select('#selectedState').text(selected);
-            updateGraph(selected_age)
+            state = d3.select(this).property('value');
+            if (state == data[0].state){
+                d3.selectAll('#selectedState').text('');
+            } else {
+                d3.selectAll('#selectedState').text('living in ' + state);
+            }
+            age = d3.select('#ageDropdown').property('value');
+            gender = d3.select('#genderDropdown').property('value');
+            updateGraph(age, gender, state)
         })
     }
 
-    function updateGraph(age){
+    function updateGraph(age, gender, state){
 
-        filteredData = data.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
-
-        // sanity check using these intermediate values 
-        dummyData = d3.group(filteredData, d => d['category']);
-        dummyData = d3.map(dummyData, function(key, value) { return {key: key[0], value: key[1].length} })        
-        dummyData.sort(function(a, b){
-            return d3.descending(a.value, b.value);
-        })
-        topTenData = dummyData.slice(0, 10);
-        topOneData = topTenData.slice(0, 1);
-
-        d3.selectAll('.topOneProduct').text(topOneData[0].key.replace(/ *\([^d)]*\) */g, ""));
-       
-        // define the x scale here
-        const xscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
-            .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
-            .range([0, topTenWidth/2]) // [0, maximum value on screen] 
-
-        // define the x-axis scale here
-        const xaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
-        .domain([0, d3.max(topTenData, d => d.value)*2]) // [0, maximum value in data]
-        .range([0, topTenWidth]) // [0, maximum value on screen] 
-
-        // define the y scale here
-        const yscale = d3.scaleBand()
-            .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-            .range([0, topTenHeight]);
-
-        // define the color scale 
-        color = d3.scaleOrdinal(d3.schemePaired).domain([0, 10]);
-
-        function clearAxes(plotContainer){
-            plotContainer.select('#x_axis').remove();
-            plotContainer.select('#x_axis_label').remove();
-            plotContainer.select('#y_axis').remove();
-            plotContainer.select('#y_axis_label').remove();
+        // filter for age, gender, and state 
+        filteredData = data; 
+        if (age != 'What is your age?') {
+            filteredData = filteredData.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
+        }
+        if (gender != 'What is your gender?') {
+            filteredData = filteredData.filter(d => d['VICTIM 1 GENDER'] === gender);
+        }
+        if (state != 'Which state do you live in?') {
+            filteredData = filteredData.filter(d => d['STATE'] === state);
         }
 
-        // create the axes 
-        function drawAxes(plotContainer) {
+        function clearPlot(){
+            topTenPlot.select('#x_axis').remove();
+            topTenPlot.select('#x_axis_label').remove();
+            topTenPlot.select('#y_axis').remove();
+            topTenPlot.select('#y_axis_label').remove();
+            topTenPlot.selectAll('.bars').remove()
+            topTenPlot.selectAll('.bar_labels').remove()
+        }
 
-            // first clear anything on the axes
-            clearAxes(plotContainer); 
-
-            const xAxis = plotContainer.append('g')                      
-                .attr('transform', `translate(0,${topTenHeight})`)   
-                .attr('id', 'x_axis')
-                .call(d3.axisBottom(xaxis_scale));                               
-
-            const yAxis = plotContainer.append('g')    
-                .attr('id', 'y_axis')               
-                .call(d3.axisLeft(yscale));                               
-
-            const xAxisLabel = plotContainer.append("text")
-                .attr('id', 'x_axis_label')
-                .attr("class", "axisLabel")
-                .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 55})`)
+        if (filteredData.length < 10) {
+            console.log('THERE WAS NOT ENOUGH DATA')
+            // display to the user that there is not enough data 
+            clearPlot();
+            topTenPlot.append('text')
+                .attr('id', 'notEnoughData')
+                .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight/2})`)
                 .style("text-anchor", "middle")
-                .text("Number of Injuries");
+                .style("font-size", 36)
+                .text('There is not enough data 😞')
+        } else {
+            // remove any lingering displays of "not enough data"
+            topTenPlot.select('#notEnoughData').remove();
 
-            const yAxisLabel = plotContainer.append("text")
-                .attr('id', 'y_axis_label')
-                .attr("class", "axisLabel")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 0 - plotMargin)
-                .attr("x", 0 - (topTenHeight / 2))
-                .attr("dy", "1em")
-                .style("text-anchor", "middle")
-                .text("Consumer Product Ranking"); 
+            // sanity check using these intermediate values 
+            dummyData = d3.group(filteredData, d => d['category']);
+            dummyData = d3.map(dummyData, function(key, value) { return {key: key[0], value: key[1].length} })        
+            dummyData.sort(function(a, b){
+                return d3.descending(a.value, b.value);
+            })
+            topTenData = dummyData.slice(0, 10);
+            topOneData = topTenData.slice(0, 1);
+
+            d3.selectAll('.topOneProduct').text(topOneData[0].key.replace(/ *\([^d)]*\) */g, ""));
+        
+            // define the x scale here
+            const xscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
+                .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
+                .range([0, topTenWidth/2]) // [0, maximum value on screen] 
+
+            // define the x-axis scale here
+            const xaxis_scale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
+            .domain([0, d3.max(topTenData, d => d.value)*2]) // [0, maximum value in data]
+            .range([0, topTenWidth]) // [0, maximum value on screen] 
+
+            // define the y scale here
+            const yscale = d3.scaleBand()
+                .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                .range([0, topTenHeight]);
+
+            // define the color scale 
+            color = d3.scaleOrdinal(d3.schemePaired).domain([0, 10]);
+
+            function clearAxes(plotContainer){
+                plotContainer.select('#x_axis').remove();
+                plotContainer.select('#x_axis_label').remove();
+                plotContainer.select('#y_axis').remove();
+                plotContainer.select('#y_axis_label').remove();
+            }
+
+            // create the axes 
+            function drawAxes(plotContainer) {
+
+                // first clear anything on the axes
+                clearAxes(plotContainer); 
+
+                const xAxis = plotContainer.append('g')                      
+                    .attr('transform', `translate(0,${topTenHeight})`)   
+                    .attr('id', 'x_axis')
+                    .call(d3.axisBottom(xaxis_scale));                               
+
+                const yAxis = plotContainer.append('g')    
+                    .attr('id', 'y_axis')               
+                    .call(d3.axisLeft(yscale));                               
+
+                const xAxisLabel = plotContainer.append("text")
+                    .attr('id', 'x_axis_label')
+                    .attr("class", "axisLabel")
+                    .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 55})`)
+                    .style("text-anchor", "middle")
+                    .text("Number of Injuries");
+
+                const yAxisLabel = plotContainer.append("text")
+                    .attr('id', 'y_axis_label')
+                    .attr("class", "axisLabel")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0 - plotMargin)
+                    .attr("x", 0 - (topTenHeight / 2))
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .text("Consumer Product Ranking"); 
+            }
+
+            // draw the graph axies 
+            drawAxes(topTenPlot);
+
+            // draw the bars for the bar graph 
+            topTenPlot.selectAll('rect')
+                .data(topTenData)
+                .join('rect')
+                    .attr('class', 'bars')
+                    .attr('x', 0)
+                    .attr('y', (d, i) => i*topTenBarHeight)       
+                    .attr('width', d => xscale(d.value))
+                    .attr('height', topTenBarHeight)  
+                    .style('fill', function(d, i){return color(i)})
+                    .style('stroke', 'white')
+
+            var text_padding = 10; 
+
+            // draw the text lbaels for the bar graph 
+            topTenPlot.selectAll('.bar_labels')
+                .data(topTenData)
+                .join('text')
+                    .attr('class', 'bar_labels')
+                    .attr('alignment-baseline', 'middle')
+                    .attr('x', d => xscale(d.value) + text_padding)
+                    .attr('y', (d, i) => i*topTenBarHeight + topTenBarHeight/2)
+                    .attr('fill', 'black')
+                    .text(d => d.key.replace(/ *\([^d)]*\) */g, "")); 
+
+            // show the injury descriptions 
+            function showInjuryDescriptions() {
+
+                // get the top most dangerous product and the selected age 
+                topOneProduct = topOneData[0].key; 
+                age = d3.select('#ageDropdown').property('value'); 
+
+                // filter data for just incident descriptions matching the above parameters
+                filteredData = data.filter(d => d['category'] === topOneProduct);
+                filteredData = filteredData.filter(d => d['VICTIM 1 AGE YEARS'] === Number(age));
+                filteredData = filteredData.map(d => d['INCIDENT DESCRIPTION'])
+
+                // display a random description as text
+                randomDescription = filteredData[Math.floor(Math.random()*filteredData.length)];
+                d3.select('#injuryDescriptionText').text(randomDescription);
+
+                // Define behavior for the refresh button 
+                d3.select('#refreshButton').on('click',function(d){
+                    updateInjuryDescriptions(filteredData);
+            }) 
+            }
+
+            function updateInjuryDescriptions(data){
+                randomDescription = data[Math.floor(Math.random()*data.length)];
+                d3.select('#injuryDescriptionText').text(randomDescription);
+            }
+
+            showInjuryDescriptions();
+
         }
-
-        // draw the graph axies 
-        drawAxes(topTenPlot);
-
-        // draw the bars for the bar graph 
-        topTenPlot.selectAll('rect')
-            .data(topTenData)
-            .join('rect')
-                .attr('x', 0)
-                .attr('y', (d, i) => i*topTenBarHeight)       
-                .attr('width', d => xscale(d.value))
-                .attr('height', topTenBarHeight)  
-                .style('fill', function(d, i){return color(i)})
-                .style('stroke', 'white')
-
-        var text_padding = 10; 
-
-        // draw the text lbaels for the bar graph 
-        topTenPlot.selectAll('.bar_labels')
-            .data(topTenData)
-            .join('text')
-                .attr('class', 'bar_labels')
-                .attr('alignment-baseline', 'middle')
-                .attr('x', d => xscale(d.value) + text_padding)
-                .attr('y', (d, i) => i*topTenBarHeight + topTenBarHeight/2)
-                .attr('fill', 'black')
-                .text(d => d.key.replace(/ *\([^d)]*\) */g, "")); 
-
-        // show the injury descriptions 
-        function showInjuryDescriptions() {
-
-            // get the top most dangerous product and the selected age 
-            topOneProduct = topOneData[0].key; 
-            ageFilter = d3.select('#ageDropdown').property('value'); 
-
-            // filter data for just incident descriptions matching the above parameters
-            filteredData = data.filter(d => d['category'] === topOneProduct);
-            filteredData = filteredData.filter(d => d['VICTIM 1 AGE YEARS'] === Number(ageFilter));
-            filteredData = filteredData.map(d => d['INCIDENT DESCRIPTION'])
-
-            // display a random description as text
-            randomDescription = filteredData[Math.floor(Math.random()*filteredData.length)];
-            d3.select('#injuryDescriptionText').text(randomDescription);
-
-            // Define behavior for the refresh button 
-            d3.select('#refreshButton').on('click',function(d){
-                updateInjuryDescriptions(filteredData);
-        }) 
-        }
-
-        function updateInjuryDescriptions(data){
-            randomDescription = data[Math.floor(Math.random()*data.length)];
-            d3.select('#injuryDescriptionText').text(randomDescription);
-        }
-
-        showInjuryDescriptions();
 
     }
 }
