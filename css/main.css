@@ -150,3 +150,7 @@ tr:nth-child(even) {
     color: #000;
     margin-bottom: 6em;
 }
+
+#age-histogram {
+    width: 80vw;
+}

@@ -33,7 +33,7 @@ var tooltip = d3.select("body")
     .text("a simple tooltip");
 
 // Read the CSV data table and extract circles data
-d3.csv('data/circles_table.csv', d3.autoType).then(createCircles)
+d3.csv('data/circles_table.csv', d3.autoType).then(createCircles);
 
 function createCircles(data) {
 
@@ -64,6 +64,9 @@ function createCircles(data) {
         });
 }
 
+// table sorting
+
+
 // *******************************************
 // ****** AGE HISTOGRAM *********************
 // *******************************************
@@ -71,7 +74,8 @@ function createCircles(data) {
 // Add SVG 
 var svg = d3.select("#my_dataviz")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("id", 'age-histogram')
+    .attr("width", width + margin.left + margin.right + 200)
     .attr("height", height + margin.top + margin.bottom)
     .style('background-color', 'whitesmoke')  
     .append("g")
@@ -167,7 +171,7 @@ function createChart1(data) {
         // define the x scale here
         const xscale = d3.scaleBand()
             .domain(d3.range(0, d3.max(dummyData, d => d.key)+1))
-            .range([0, width]);
+            .range([0, width + 200]);
 
         // define the color scale 
         color = d3.scaleOrdinal(d3.schemePastel1).domain(d3.range(d => d.length));

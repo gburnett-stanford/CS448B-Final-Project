@@ -57,69 +57,90 @@
 
     <p class="paragraph">
       Below is a a high chair visualized with the parts of the chair, or hazard patterns, that are most invovled when the injury incident
-      occurrs.
+      occurrs. Hovering over the green circles will bring up a label for what part of the chair the mouse is 
+      currently on; at the same time, the table below will have the corresponding location or hazard pattern row highlighted. The table is sorted
+      in descending order by Total Incidents and also includes data on Injuries and the Ratio of Injuries to Incidents for each
+      Hazard Pattern.
     </p>
 
     <!-- Visualization 1 -->
     <div id="highchair"></div>
 
+    
     <table id="highchair-table">
       <tr>
         <th>Hazard Pattern</th>
         <th>Total Incidents</th>
         <th>Injuries</th>
-        <th>Fatalities</th>
+        <th>Ratio of Injuries to Total Incidents</th>
       </tr>
       <tr id="row-frame">
         <td>Frame</td>
         <td>650</td>
         <td>20</td>
-        <td>0</td>
+        <td>0.031</td>
       </tr>
       <tr id="row-seat">
         <td>Seat</td>
         <td>205</td>
         <td>41</td>
-        <td>0</td>
+        <td>0.200</td>
       </tr>
       <tr id="row-restraint">
         <td>Restraint System</td>
         <td>139</td>
         <td>12</td>
-        <td>0</td>
+        <td>0.086</td>
       </tr>
       <tr id="row-armrest">
         <td>Armrest</td>
         <td>81</td>
         <td>2</td>
-        <td>0</td>
+        <td>0.025</td>
       </tr>
       <tr id="row-tray">
         <td>Tray</td>
         <td>75</td>
         <td>33</td>
-        <td>0</td>
+        <td>0.440</td>
       </tr>
       <tr id="row-toy">
         <td>Toy Accessories</td>
         <td>70</td>
         <td>1</td>
-        <td>0</td>
+        <td>0.014</td>
       </tr>
     </table>
-
+    
     <h3>
       Why this Data <b class="greenText">Helps</b>
     </h3>
     <p class="paragraph">
-      The data gathered on which are the most dangerous hazard patterns and where they are located on the high chair...
+      The data gathered on which are the most dangerous hazard patterns and where they are located on the high chair.
+      Having this knowledge then allows the commission to narrow down the root cause of the hazard patterns and what needs
+      to be changed. For example, with the case of restraint systems, the CPSC found that a more stringent standard for labels
+      and instructional literature than the existing standard (ASTM F404-15) would further reduce the risk of injuries within
+      this hazard pattern.
+    </p>
+    <p class="paragraph">
+      If you are reading this article, it is likely you are not under the age of 1, however, this idea of identifying 
+      hazard patterns can be applied to all consumer products to make them safer and in turn result in less injuries
+      or even deaths for everyone in the US.
     </p>
   </div>
 
   <!-- Visualization 1 -->
   <div class="main">
-    <h2>Age Histogram</h2>
-    <select id="selectButton"></select>
+    <h2>Beyond the High Chair: Let's Explore Other Products</h2>
+    <p class="paragraph">
+      Asides from high chairs, what other everyday products do you want to explore? With the drop down
+      below you can select the consumer product category to discover what age group is most at risk for
+      that product. Previously we saw that 0 year olds, or those under the age of 1, were most at risk
+      with high chairs.
+    </p>
+    <select id="selectButton">
+      <option selected disabled hidden>Choose a Product Category</option>
+    </select>
     <h3> The demographic most at risk with <b id="productCategory"> ___ </b> are <b id="topOneAge"> ___ </b> years old.</h3>
   </div>
 
