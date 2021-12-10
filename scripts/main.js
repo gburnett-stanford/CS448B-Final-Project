@@ -392,7 +392,7 @@ function createTopTenGraph(data){
             topTenPlot.selectAll('.bar_labels').remove()
         }
 
-        if (filteredData.length < 10) {
+        if (filteredData.length === 0) {
             console.log('THERE WAS NOT ENOUGH DATA')
             // display to the user that there is not enough data 
             clearPlot();
