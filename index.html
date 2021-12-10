@@ -60,7 +60,8 @@
       occurrs. Hovering over the green circles will bring up a label for what part of the chair the mouse is 
       currently on; at the same time, the table below will have the corresponding location or hazard pattern row highlighted. The table is sorted
       in descending order by Total Incidents and also includes data on Injuries and the Ratio of Injuries to Incidents for each
-      Hazard Pattern.
+      Hazard Pattern. Note: The far right point for 'Toy Accessories' is not located anywhere specific on the high chair
+      as toy Accessories were located in multiple parts of the chair in reported incidents.
     </p>
 
     <!-- Visualization 1 -->
@@ -116,8 +117,8 @@
       Why this Data <b class="greenText">Helps</b>
     </h3>
     <p class="paragraph">
-      The data gathered on which are the most dangerous hazard patterns and where they are located on the high chair.
-      Having this knowledge then allows the commission to narrow down the root cause of the hazard patterns and what needs
+      Having this knowledge of which parts of the high chair are the most dangerous allows the commission
+      to narrow down the root cause of these hazard patterns and what needs
       to be changed. For example, with the case of restraint systems, the CPSC found that a more stringent standard for labels
       and instructional literature than the existing standard (ASTM F404-15) would further reduce the risk of injuries within
       this hazard pattern.
@@ -139,9 +140,9 @@
       with high chairs.
     </p>
     <p class="paragraph">
-      If you're feeling stuck, some of the interesting categories to look like are when a product affects
+      If you're feeling stuck, some of the interesting categories to look at are when a product affects
       almost all ages such as All Terrain Vehicles (# of Wheels Unspecified/off Road), or when a product 
-      only affects the young and the old such as Night Lights. Feel free to look for similar patterns or
+      only affects the young and the old leaving a large middle segment untouched such as Night Lights. Feel free to look for similar patterns or
       anything else you want to.
     </p>
     <select id="selectButton">
@@ -161,7 +162,7 @@
       has data on males and females and no other genders so that is all that we can provide at this time.
     </p>
     <p class="paragraph">
-      Once these are all inputted, then a chart will appear with the top 10 most dangerous consumer products
+      Once these are all inputted, a chart will appear with the top 10 most dangerous consumer products
       to you in descending order starting from the top. Your most dangerous product will be written in green right below the bar chart.
     </p>
 
@@ -173,7 +174,7 @@
     </div>
     <h3>
       You have selected that you are a <b class="selectedAge greenText"> ___ </b> year old <b id="selectedGender" class="greenText"> ___ </b> living in <b id="selectedState" class="greenText"> ___ </b>.
-      Here are the top 10 most dangerous products for you.
+      Here are the top 10 most dangerous products to you.
     </h3> 
   </div>
 
@@ -181,21 +182,31 @@
 
   <div class="main">
     <h3> Let's explore <b class="greenText">your</b> most dangerous product: <b class="topOneProduct greenText"> ___ </b> </h3>
+    <p class="paragraph">
+      Knowing which product is most dangerous to you can help you to be more careful when using said product.
+      It may also be helpful to hear about others incidents through written descriptions to identify patterns
+      much like the CPSC does to improve safety and reduce injuries.
+    </p>
+     <!-- Visualization 3 - Exploring Top One -->
+    <p class="paragraph">
+      Below is a description of one of the <b class="topOneProduct greenText"> ___  </b> injuries involving a <b class="selectedAge greenText"> ___ </b> year old. 
+      Press the "Refresh" button to see a different description. 
+    </p>
+
+    <div>
+      <button id="refreshButton"> Refresh </button>
+      <i><h3 id="injuryDescriptionText"> </h3></i>
+    </div>
   </div>
 
-  <!-- Visualization 3 - Exploring Top One -->
-  <p class="paragraph">
-    Below is a description of one of the <b class="topOneProduct"> ___  </b> injuries involving a <b class="selectedAge"> ___ </b> year old. Press the "Refresh" button to see a different description. 
-  </p>
-
-  <div>
-    <button id="refreshButton"> Refresh </button>
-    <i><h3 id="injuryDescriptionText"> </h3></i>
+  <div class="main">
+    <p class="paragraph">
+      Can you see any commonalities in the way people have been injured by this product? What kind of proposal could the CPSC make to reduce the number of injuries caused by this consumer product? 
+    </p>
+    <p class="paragraph">
+      Feel free to re-input information in the dropdowns for friends and family to help look out for them as well.
+    </p>
   </div>
-
-  <p class="paragraph">
-    Can you see any commonalities in the way people have been injured by this product? What kind of proposal could the CPSC make to reduce the number of injuries caused by this consumer product? 
-  </p>
 
   <!-- Load Main Script -->
   <script src="scripts/main.js"></script>
