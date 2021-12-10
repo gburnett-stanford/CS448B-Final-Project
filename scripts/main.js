@@ -94,7 +94,7 @@ function createChart1(data) {
 
         // Create a map where the key is the injury category and the
         // value is the count of injuries in that category
-        var filteredData = data.filter(function(d) { return d.category !== '' && d.incidentYear >= 2015; });
+        var filteredData = data.filter(function(d) { return d.category !== '' && d.category !== null && d.incidentYear >= 2015; });
         var categoryGroup = d3.group(filteredData, d => d.category, d => d.year);
 
         var categoryMap = d3.map(categoryGroup, function(key) {
