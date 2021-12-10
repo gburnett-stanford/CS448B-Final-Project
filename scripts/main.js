@@ -203,12 +203,14 @@ function createChart1(data) {
 
             const xAxisLabel = plotContainer.append("text")
                 .attr('id', 'x_axis_label')
+                .attr("class", "axisLabel")
                 .attr("transform", `translate(${(width + 200)/2}, ${height + 35 + 25/2})`)
                 .style("text-anchor", "middle")
                 .text("Age");
 
             const yAxisLabel = plotContainer.append("text")
                 .attr('id', 'y_axis_label')
+                .attr("class", "axisLabel")
                 .attr("transform", "rotate(-90)")
                 .attr("y", 0 - margin.left)
                 .attr("x", 0 - (height/2))
@@ -292,7 +294,7 @@ function createAgeSelector(age_data){
 var topTenWidth = 1000; 
 var topTenHeight = 300; 
 var topTenBarHeight = topTenHeight / 10; 
-var plotMargin = 50; 
+var plotMargin = 70; 
 
 // Create a container for the graph 
 function createTopTenContainer() {
@@ -308,7 +310,7 @@ function createTopTenContainer() {
     
     topTenContainer.append('g')
         // Translate g element by plotMargin, plotMargin to place inner plotting region.
-        .attr('transform', `translate(${plotMargin},${plotMargin})`) 
+        .attr('transform', `translate(100, 50)`) 
         .attr('id', 'topTenPlot');   //Give the plot container an id so we can access it later.
     
     return topTenContainer;
@@ -403,12 +405,14 @@ function createTopTenGraph(data){
 
             const xAxisLabel = plotContainer.append("text")
                 .attr('id', 'x_axis_label')
-                .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 35})`)
+                .attr("class", "axisLabel")
+                .attr("transform", `translate(${topTenWidth/2}, ${topTenHeight + 55})`)
                 .style("text-anchor", "middle")
                 .text("Number of Injuries");
 
             const yAxisLabel = plotContainer.append("text")
                 .attr('id', 'y_axis_label')
+                .attr("class", "axisLabel")
                 .attr("transform", "rotate(-90)")
                 .attr("y", 0 - plotMargin)
                 .attr("x", 0 - (topTenHeight / 2))

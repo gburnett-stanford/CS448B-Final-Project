@@ -175,3 +175,7 @@ tr:nth-child(even) {
     z-index: -1;
     color: #228B22;
 }
+
+.axisLabel {
+    font-weight: 550;
+}
