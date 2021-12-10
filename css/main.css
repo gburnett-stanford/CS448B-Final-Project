@@ -179,3 +179,11 @@ tr:nth-child(even) {
 .axisLabel {
     font-weight: 550;
 }
+
+.last {
+    margin-bottom: 6em;
+}
+
+hr {
+    width: 20em;
+}
