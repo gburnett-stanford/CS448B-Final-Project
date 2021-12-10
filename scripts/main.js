@@ -203,7 +203,7 @@ function createChart1(data) {
 
             const xAxisLabel = plotContainer.append("text")
                 .attr('id', 'x_axis_label')
-                .attr("transform", `translate(${(width + 200)/2}, ${height + 35})`)
+                .attr("transform", `translate(${(width + 200)/2}, ${height + 35 + 25/2})`)
                 .style("text-anchor", "middle")
                 .text("Age");
 
