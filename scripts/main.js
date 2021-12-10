@@ -45,7 +45,7 @@ function createCircles(data) {
         .attr("r", 10)
         .on("mouseover", function(d) {
             var curRow = d3.select(this).data()[0].id;
-            d3.select(curRow).style("background-color", "#228B22"); //math id here add new data id-name
+            d3.select(curRow).style("background-color", "#CAEEC2"); //math id here add new data id-name
             d3.select(curRow).style("font-weight", "bold");
             tooltip.text(d3.select(this).data()[0].location);
             return tooltip.style("visibility", "visible");
