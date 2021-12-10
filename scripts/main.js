@@ -174,7 +174,7 @@ function createChart1(data) {
             .range([0, width + 200]);
 
         // define the color scale 
-        color = d3.scaleOrdinal(d3.schemePastel1).domain(d3.range(d => d.length));
+        color = d3.scaleOrdinal(d3.schemePaired).domain(d3.range(d => d.length));
 
         function clearAxes(plotContainer){
             plotContainer.select('#x_axis').remove();
