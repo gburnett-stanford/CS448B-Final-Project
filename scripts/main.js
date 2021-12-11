@@ -524,25 +524,36 @@ function createTopTenGraph(data){
                     filteredData = filteredData.filter(d => d['STATE'] === state);
                 }
                 
+                // get a list of unique product hazards 
                 productHazards = filteredData.map(d => d['PRODUCT 1 HAZARD'])
+                uniqueHazards = [...new Set(productHazards)];
                 productHazardPercentages = getProductHazardPercentages(productHazards);
+                productHazardPercentages = productHazardPercentages.map(function(x) { return Math.round(x * 1000) / 10; });
 
-                console.log(productHazardPercentages);
+                // create an array of the hazards and their associated percentages 
+                hazardsAndPercentagesArray = []
+                for (index = 0; index < uniqueHazards.length; index++) {
+                    // don't include any 'null' hazards
+                    if(uniqueHazards[index] != null){
+                        newObject = {}
+                        newObject['hazard'] = uniqueHazards[index]
+                        newObject['percentage'] = productHazardPercentages[index]
+                        hazardsAndPercentagesArray.push(newObject)
+                    }
+                }
 
-                // sort the hazards and percentages
-                indices = Array.from(productHazardPercentages.keys()).sort( (a,b) => productHazardPercentages[b] - productHazardPercentages[a] )
-                console.log(indices); 
-                sortedHazards = indices.map(i => productHazards[i])
-                sortedPercentages = indices.map(i => productHazardPercentages[i])
+                // sort this array in order of descending percentages 
+                hazardsAndPercentagesArray.sort((a, b) => b.percentage - a.percentage)
 
-                console.log('sorted hazards')
-                console.log(sortedHazards)
-                console.log('sorted percentages')
-                console.log(sortedPercentages)
+                // update product hazard descriptions
+                d3.select('#productHazardList')
+                    .selectAll('li')
+                    .data(hazardsAndPercentagesArray)
+                    .join('li')
+                        .text(d => `${d.hazard}: ${d.percentage}%`)
 
                 incidentDescriptions = filteredData.map(d => d['INCIDENT DESCRIPTION'])
                 topTenWords = getTopTenWords(incidentDescriptions);
-                console.log(topTenWords)
 
                 // display a random description as text
                 randomDescription = incidentDescriptions[Math.floor(Math.random()*incidentDescriptions.length)];
@@ -557,13 +568,14 @@ function createTopTenGraph(data){
             function getProductHazardPercentages(data){
                 percentages = new Array();
                 uniqueHazards = [...new Set(data)]; 
-                console.log(uniqueHazards)
                 for (hazard of uniqueHazards){
                     count = data.filter(d => d === hazard).length
                     percentages.push(count/data.length)
                 }
                 return percentages
             }
+
+
 
             function getTopTenWords(data){
                 numWords = 10; 
