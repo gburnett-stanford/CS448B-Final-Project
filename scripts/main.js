@@ -391,8 +391,8 @@ function createTopTenGraph(data){
             topTenPlot.selectAll('.bars').remove()
             topTenPlot.selectAll('.bar_labels').remove()
         }
-
-        if (filteredData.length === 0) {
+        
+        if (filteredData.length === 0 || (filteredData.length === 1 && !filteredData[0].category)) {
             console.log('THERE WAS NOT ENOUGH DATA')
             // display to the user that there is not enough data 
             clearPlot();
@@ -404,7 +404,7 @@ function createTopTenGraph(data){
                 .text('There is not enough data 😞')
         } else {
             // remove any lingering displays of "not enough data"
-            topTenPlot.select('#notEnoughData').remove();
+            topTenPlot.select('#notEnoughData').remove(); //problems here sometimes
 
             // sanity check using these intermediate values 
             dummyData = d3.group(filteredData, d => d['category']);
@@ -415,8 +415,10 @@ function createTopTenGraph(data){
             topTenData = dummyData.slice(0, 10);
             topOneData = topTenData.slice(0, 1);
 
-            d3.selectAll('.topOneProduct').text(topOneData[0].key.replace(/ *\([^d)]*\) */g, ""));
-        
+            if(topOneData[0].key !== null) {
+                d3.selectAll('.topOneProduct').text(topOneData[0].key.replace(/ *\([^d)]*\) */g, ""));
+            }
+
             // define the x scale here
             const xscale = d3.scaleLinear() // a function that converts values in data to pixels on the screen 
                 .domain([0, d3.max(topTenData, d => d.value)]) // [0, maximum value in data]
@@ -501,7 +503,10 @@ function createTopTenGraph(data){
                     .attr('x', d => xscale(d.value) + text_padding)
                     .attr('y', (d, i) => i*topTenBarHeight + topTenBarHeight/2)
                     .attr('fill', 'black')
-                    .text(d => d.key.replace(/ *\([^d)]*\) */g, "")); 
+                    .text(function(d) {
+                        if(d.key !== null) console.log('NULL VALUE', d);
+                        if(d.key !== null) return d.key.replace(/ *\([^d)]*\) */g, "");
+                    });
 
             // show the injury descriptions 
             function showInjuryDescriptions() {
