@@ -404,7 +404,7 @@ function createTopTenGraph(data){
                 .text('There is not enough data 😞')
         } else {
             // remove any lingering displays of "not enough data"
-            topTenPlot.select('#notEnoughData').remove(); //problems here sometimes
+            topTenPlot.selectAll('#notEnoughData').remove(); //problems here sometimes
 
             // sanity check using these intermediate values 
             dummyData = d3.group(filteredData, d => d['category']);
