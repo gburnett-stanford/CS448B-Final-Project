@@ -523,16 +523,80 @@ function createTopTenGraph(data){
                 if (state != 'Which state do you live in?') {
                     filteredData = filteredData.filter(d => d['STATE'] === state);
                 }
-                filteredData = filteredData.map(d => d['INCIDENT DESCRIPTION'])
+                
+                productHazards = filteredData.map(d => d['PRODUCT 1 HAZARD'])
+                productHazardPercentages = getProductHazardPercentages(productHazards);
+
+                console.log(productHazardPercentages);
+
+                // sort the hazards and percentages
+                indices = Array.from(productHazardPercentages.keys()).sort( (a,b) => productHazardPercentages[b] - productHazardPercentages[a] )
+                console.log(indices); 
+                sortedHazards = indices.map(i => productHazards[i])
+                sortedPercentages = indices.map(i => productHazardPercentages[i])
+
+                console.log('sorted hazards')
+                console.log(sortedHazards)
+                console.log('sorted percentages')
+                console.log(sortedPercentages)
+
+                incidentDescriptions = filteredData.map(d => d['INCIDENT DESCRIPTION'])
+                topTenWords = getTopTenWords(incidentDescriptions);
+                console.log(topTenWords)
 
                 // display a random description as text
-                randomDescription = filteredData[Math.floor(Math.random()*filteredData.length)];
+                randomDescription = incidentDescriptions[Math.floor(Math.random()*incidentDescriptions.length)];
                 d3.select('#injuryDescriptionText').text(randomDescription);
 
                 // Define behavior for the refresh button 
                 d3.select('#refreshButton').on('click',function(d){
-                    updateInjuryDescriptions(filteredData);
+                    updateInjuryDescriptions(incidentDescriptions);
             }) 
+            }
+
+            function getProductHazardPercentages(data){
+                percentages = new Array();
+                uniqueHazards = [...new Set(data)]; 
+                console.log(uniqueHazards)
+                for (hazard of uniqueHazards){
+                    count = data.filter(d => d === hazard).length
+                    percentages.push(count/data.length)
+                }
+                return percentages
+            }
+
+            function getTopTenWords(data){
+                numWords = 10; 
+
+                // put all the injury descriptions into one string 
+                oneString = data.join(' ');
+
+                // get rid of words like "a" and "the" 
+                oneString = cleanString(oneString); 
+
+                // adapted from: https://www.tutorialspoint.com/finding-n-most-frequent-words-from-a-sentence-in-javascript 
+                strArr = oneString.split(' ');
+                map = {};
+                strArr.forEach(word => {
+                    if(map.hasOwnProperty(word)){
+                        map[word]++;
+                    }else{
+                        map[word] = 1;
+                    }
+                });
+                frequencyArr = Object.keys(map).map(key => [key, map[key]]);
+                frequencyArr.sort((a, b) => b[1] - a[1]);
+                return frequencyArr.slice(0, numWords).map(el => el[0]);
+            }
+
+            function cleanString(myString){
+
+                badWords = ['with', 'at', 'the', 'of', 'was', 'a', 'yof', 'yom', 'to', 'us', '', 'in', 'on', 'cod', 'he', 'his', 'she', 'hers', 'decedent', 'an', 'and', 'were', 'is', 'yo', 'when', 'i', 'my'];
+                for (badWord of badWords){
+                    myRegex = new RegExp('\\b'+badWord+'\\b', 'gi');
+                    myString = myString.replace(myRegex, '');
+                }
+                return myString
             }
 
             function updateInjuryDescriptions(data){
